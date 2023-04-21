@@ -33,14 +33,12 @@ export function giveCardsOnStart() {
 }
 
 export const makePlayerMove = (playerIndex: number, card: typeof CardComponent) => {
+
   if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker) {
     makeAttackingMove(playerIndex, card.name);
-    console.log('attack done')
-    console.log(gameStore.placedCards)
   } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Defender) {
     makeDefendingMove(playerIndex, card.name);
-    console.log('defend done')
-    console.log(gameStore.placedCards)
+
   }
 }
 
@@ -50,16 +48,18 @@ const makeAttackingMove = (playerIndex: number, cardName: string) => {
   const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
   const placedCard = { attacker:card } as TypePlacedCard
   gameStore.placedCards.push(placedCard);
-  gameStore.players[playerIndex].playerRole = TypePlayerRole.Defender;
+  console.log(gameStore.placedCards)
 }
 
 const makeDefendingMove = (playerIndex: number, cardName: string) => {
-  console.log('start def move')
-  const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
-  const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
-  const placedCard = { defender:card } as TypePlacedCard
-  gameStore.placedCards = [...gameStore.placedCards!, placedCard];
-  gameStore.players[playerIndex].playerRole = TypePlayerRole.Attacker;
+  if (!gameStore.placedCards[gameStore.placedCards.length - 1].defender) {
+    console.log('start def move')
+    const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
+    const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
+    // const placedCard = { defender:card } as TypePlacedCard
+    gameStore.placedCards[gameStore.placedCards.length - 1].defender = card;
+  }
+
 }
 
 export const sortPlayerCards = (player: number, type: string) => {

@@ -178,39 +178,44 @@ export const GameStage  = () => {
         y={300}
       >
         {snap.placedCards.map((cardsPair, index) => {
-          if (cardsPair.attacker) {
-            const card = cardsPair.attacker as TypeCard;
-            const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
-            const cardTexture = Texture.from(cardPath);
+          console.log(cardsPair)
+          const cardAttacker = cardsPair.attacker as TypeCard,
+                cardDefender = cardsPair.defender? cardsPair.defender : null;
+          const cardAttackerPath: string = `./assets/cards/${cardAttacker.suit.slice(0, 1).concat(cardAttacker.rank.toString())}.png`;
+          const cardAttackerTexture = Texture.from(cardAttackerPath);
 
-            return <CardComponent
-            key={card.name}
-            name={card.name}
-            anchor={0}
-            x={0 + index*40}
-            y={0}
-            width={50}
-            height={70}
-            texture={cardTexture}
-          />
-          } 
-          if (cardsPair.defender) {
-            const card = cardsPair.defender as TypeCard;
-            const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
-            const cardTexture = Texture.from(cardPath);
-
-            return <CardComponent
-            key={card.name}
-            name={card.name}
-            anchor={-0.2}
-            x={0 + index*40}
-            y={0}
-            width={50}
-            height={70}
-            texture={cardTexture}
-          />
+          let cardDefenderPath: string = `./assets/cards/backR.png`;
+          let cardDefenderTexture = Texture.from(cardDefenderPath);
+          
+          if (cardDefender) {
+            cardDefenderPath = `./assets/cards/${cardDefender.suit.slice(0, 1).concat(cardDefender.rank.toString())}.png`;
+            cardDefenderTexture = Texture.from(cardDefenderPath);
           }
-         
+
+          return <>
+            <CardComponent
+              key={cardAttacker.name}
+              name={cardAttacker.name}
+              anchor={0}
+              x={0 + index*50}
+              y={0}
+              width={50}
+              height={70}
+              texture={cardAttackerTexture}
+            />
+            {cardDefender ? (
+              <CardComponent
+              key={cardDefender.name}
+              name={cardDefender.name}
+              anchor={-0.2}
+              x={0 + index*50}
+              y={0}
+              width={50}
+              height={70}
+              texture={cardDefenderTexture}
+            />
+            ) : null }
+          </>
         })}
       </ContainerWithName>
       <ContainerWithName
