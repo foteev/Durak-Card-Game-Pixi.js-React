@@ -16,17 +16,15 @@ import { startGame,  sortPlayerCards } from './components/utils/utils';
 
 
 
-function App() {
+export const App = () => {
   const store = useSnapshot(gameStore);
   return (
     <div className="App">
       <GameStage />
       <div className = "game_stage_buttons">
         <button className="button" onClick={startGame}>Start game</button>
-        <button className="button" onClick={() => sortPlayerCards(1, 'byName')}>Sort 1 by name</button>
         <button className="button" onClick={() => sortPlayerCards(1, 'byRank')}>Sort 1 by value</button>
         <button className="button" onClick={() => sortPlayerCards(1, 'bySuit')}>Sort 1 by suit</button>
-        <button className="button" onClick={() => sortPlayerCards(2, 'byName')}>Sort 2 by name</button>
         <button className="button" onClick={() => sortPlayerCards(2, 'byRank')}>Sort 2 by value</button>
         <button className="button" onClick={() => sortPlayerCards(2, 'bySuit')}>Sort 2 by suit</button>
       </div>
@@ -34,5 +32,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

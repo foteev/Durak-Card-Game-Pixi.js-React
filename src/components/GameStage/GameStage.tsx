@@ -22,7 +22,7 @@ import {
   TypeGameStatus
 } from "../../types/types";
 import {
-  giveCardsOnStart, makePlayer1Move
+  giveCardsOnStart, makePlayerMove
 } from '../utils/utils'
 import {
   Button,
@@ -57,9 +57,8 @@ const style = {
 };
 
 export const GameStage  = () => {
-  // I used textures for simplicity, 
-  // but the docs say that using a spritesheet prop and constructor is best
-  const [textures, setTextures] = useState([]);
+
+  // const [textures, setTextures] = useState([]);
   const snap = useSnapshot(gameStore);
 
   // useEffect(() => {
@@ -83,16 +82,6 @@ export const GameStage  = () => {
   //   }
   // }, []);
 
-  // can I leave this aspect to you?
-
-  // const toggleAnimation = useCallback(() => {
-  //   if (animationRef.current) {
-  //     animationRef.current.playing
-  //       ? animationRef.current.stop()
-  //       : animationRef.current.play();
-  //   }
-  // }, []);
-
   // console.log('[Game] textures', textures)
 
   // I changed this to null as TS complained about returning a string
@@ -100,35 +89,13 @@ export const GameStage  = () => {
   //   return null;
   // }
 
-  // console.log(PIXI.Sprite.from('assets/cards/C6.png'))
 
-  // const cardPath: string = `./assets/cards/C6.png`;
-  // const cardTexture = PIXI.Texture.from(cardPath);
-
-  // const handleClick = (target: any) => {
-  //   // if (typeof e.target === typeof Sprite) {
-  //   //   // const sprite = JSON.stringify(e.target)
-  //   //   console.log(sprite)
-  //   // }
-  //   console.log(target)
-  //   console.log(target.name!);
-  //   console.log(target.parent)
-    
-  //   const cardIndex: number = snap.deckCards!.indexOf(snap.deckCards.filter(card => card.name === target.name as string)[0]);
-  //   const card: TypeCard = gameStore.deckCards!.splice(cardIndex, 1)[0] as TypeCard;
-  //   const placedCard = Object.create({ attacker:card }) as TypePlacedCard
-  //   gameStore.placedCards = [...gameStore.placedCards!, placedCard];
-  //   console.log(gameStore.placedCards[0].attacker.name)
-
-  // }
-
-  const handlePlayer2Click = (e:any) => {
-    // makeMove(e.target);
-
+  const handlePlayer2Click = (target: any) => {
+    makePlayerMove(1, target);
   }
 
   const handlePlayer1Click = (target: any) => {
-    makePlayer1Move(target);
+    makePlayerMove(0, target);
   }
 
   return (
@@ -144,16 +111,13 @@ export const GameStage  = () => {
         /> */}
       {/* </ContainerWithName> */}
 
-
       <ContainerWithName
       name={'DeckContainer'}
         x={100}
       >
         {snap.deckCards?.map((card, index, array) => {
-
-const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
-const cardTexture = Texture.from(cardPath);
-
+          const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
+          const cardTexture = Texture.from(cardPath);
           if (index === array.length - 1) {
             return <CardComponent
             key={card.name}
@@ -166,11 +130,8 @@ const cardTexture = Texture.from(cardPath);
             texture={cardTexture}
             interactive={true}
             eventMode={'static'}
-            // click={(event: Event) => {
-            //   handleClick(event.target)
-            // }}
           />
-          } 
+          }
           return <CardComponent
             key={card.name}
             name={card.name}
@@ -182,12 +143,8 @@ const cardTexture = Texture.from(cardPath);
             texture={cardTexture}
             interactive={true}
             eventMode={'static'}
-            // click={(event: Event) => {
-            //   handleClick(event.target)
-            // }}
           />
         })}
-        {/* <Sprite anchor={0.5} x={100} y={100} texture={cardTexture} /> */}
       </ContainerWithName>
       <ContainerWithName
         name={"Player2Container"}
@@ -253,8 +210,6 @@ const cardTexture = Texture.from(cardPath);
             texture={cardTexture}
           />
           }
-
-
          
         })}
       </ContainerWithName>

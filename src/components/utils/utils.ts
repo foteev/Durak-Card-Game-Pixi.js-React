@@ -32,36 +32,34 @@ export function giveCardsOnStart() {
   console.log('subs draw')
 }
 
-export const makePlayer1Move = (card: typeof CardComponent) => {
-  if (gameStore.players[0].playerRole === TypePlayerRole.Attacker) {
-    makeAttackingMove1(card.name);
+export const makePlayerMove = (playerIndex: number, card: typeof CardComponent) => {
+  if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker) {
+    makeAttackingMove(playerIndex, card.name);
     console.log('attack done')
-  } else if (gameStore.players[0].playerRole === TypePlayerRole.Defender) {
-    makeDefendingMove1(card.name);
+    console.log(gameStore.placedCards)
+  } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Defender) {
+    makeDefendingMove(playerIndex, card.name);
     console.log('defend done')
+    console.log(gameStore.placedCards)
   }
 }
 
-const makeAttackingMove1 = (cardName: string) => {
-  console.log('start move')
-  const cardIndex: number = gameStore.players[0].cards.indexOf(gameStore.players[0].cards.filter(card => card.name === cardName as string)[0]);
-  const card: TypeCard = gameStore.players[0].cards.splice(cardIndex, 1)[0] as TypeCard;
+const makeAttackingMove = (playerIndex: number, cardName: string) => {
+  console.log('start att move')
+  const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
+  const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
   const placedCard = { attacker:card } as TypePlacedCard
-  gameStore.placedCards = [...gameStore.placedCards!, placedCard];
-  console.log(gameStore.placedCards)
-  console.log(gameStore.players[0].cards)
-  gameStore.players[0].playerRole = TypePlayerRole.Defender;
+  gameStore.placedCards.push(placedCard);
+  gameStore.players[playerIndex].playerRole = TypePlayerRole.Defender;
 }
 
-const makeDefendingMove1 = (cardName: string) => {
-  console.log('start move')
-  const cardIndex: number = gameStore.players[0].cards.indexOf(gameStore.players[0].cards.filter(card => card.name === cardName as string)[0]);
-  const card: TypeCard = gameStore.players[0].cards.splice(cardIndex, 1)[0] as TypeCard;
+const makeDefendingMove = (playerIndex: number, cardName: string) => {
+  console.log('start def move')
+  const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
+  const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
   const placedCard = { defender:card } as TypePlacedCard
   gameStore.placedCards = [...gameStore.placedCards!, placedCard];
-  console.log(gameStore.placedCards)
-  console.log(gameStore.players[0].cards)
-  gameStore.players[0].playerRole = TypePlayerRole.Attacker;
+  gameStore.players[playerIndex].playerRole = TypePlayerRole.Attacker;
 }
 
 export const sortPlayerCards = (player: number, type: string) => {
