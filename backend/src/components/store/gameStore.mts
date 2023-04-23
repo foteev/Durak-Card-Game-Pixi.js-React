@@ -1,8 +1,9 @@
-import { TypeGameStore, TypeGameStatus, TypeCard, TypePlacedCard, TypePlayer, TypePlayerRole, TypePlayerStatus, TypeAction } from '../../types/types';
-import { proxy, subscribe } from 'valtio';
-import { Deck } from '../../components/Deck/Deck';
+import { TypeGameStore, TypeGameStatus, TypeCard, TypePlacedCard, TypePlayer, TypePlayerRole, TypePlayerStatus, TypeAction } from '../types/types.mjs';
+import { proxy, subscribe } from 'valtio/vanilla';
+import { proxyWithHistory } from 'valtio/utils';
+// import { Deck } from '../../components/Deck/Deck';
 
-const deck = new Deck();
+// const deck = new Deck();
 
 // let deck: Deck = [];
 // const deckPromise = async () => await new Deck();
@@ -31,15 +32,14 @@ const player2: TypePlayer = {
   cards: [],
 }
 
-
 export const gameStore = proxy<TypeGameStore>({
   id: '1',
 
-  gameStatus: TypeGameStatus.WaitingForStart,
+  gameStatus: TypeGameStatus.WaitingForPlayers,
 
   hostId: 'host',
 
-  deckCards: deck.cards,
+  deckCards: [],
 
   lastAttackerCard: null,
 

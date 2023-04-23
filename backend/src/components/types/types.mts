@@ -92,7 +92,7 @@ export type TypeGameStore = {
 
   activePlayerId?: string;
 
-  players: TypePlayer[] | [];
+  players: TypePlayer[];
 
   trumpCard?: TypeCard;
 
@@ -111,3 +111,16 @@ export type TypeGameStore = {
   lastDefenderCard?: TypeCard;
 
 }
+
+
+// actions?: {
+//   setGameState: () => void;
+//   startGame: () => void;
+//   leaveRoom: () => void;
+//   restartGame: () => void;
+//   openRoom: () => void;
+//   makeAttackingMove: (card: TypeCard) => void;
+//   makeDefensiveMove: (card: TypeCard) => void;
+//   attackerPass: () => void;
+//   defenderTake: () => void;
+// };

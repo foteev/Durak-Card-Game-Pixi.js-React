@@ -14,34 +14,19 @@ import {
 } from "pixi.js";
 import * as PIXI from 'pixi.js';
 import { proxy, subscribe, useSnapshot } from 'valtio';
-import { gameStore } from "../store/gameStore";
 import '@pixi/events';
-import { 
+import {
   TypeCard,
   TypePlacedCard,
-  TypeGameStatus
+  TypeGameStatus,
+  TypeGameStore
 } from "../../types/types";
-import {
-  giveCardsOnStart, makePlayerMove
-} from '../utils/utils'
 import {
   Button,
   FancyButton,
   ButtonContainer
 } from '@pixi/ui'
-
-
-// const ButtonComponent = PixiComponent('ButtonComponent', {
-//   create: () => new ButtonContainer(
-//     new Graphics()
-//         .beginFill(0xFFFFFF)
-//         .drawRoundedRect(0, 0, 100, 50, 15)
-// ),
-//   // applyProps: (props) => {...props}
-// });
-
-const spritesheetUrl =
-  "https://pixijs.io/examples/examples/assets/spritesheet/fighter.json";
+import { str } from '../utils/utils'
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -58,64 +43,23 @@ const style = {
 
 export const GameStage  = () => {
 
-  // const [textures, setTextures] = useState([]);
-  const snap = useSnapshot(gameStore);
-
-  // useEffect(() => {
-  //   // I use Promises for no reason other than I often work with 
-  //   // ancient hardware.
-  //   function loadSprite() {
-  //     Assets
-  //       .load(spritesheetUrl)
-  //       .then((sheet) => {
-  //         setTextures(sheet.textures);
-  //       })
-  //       .catch((err) => {
-  //         console.error('[Game][useEffect] err %o loading sheet', err)
-  //       })
-  //   }
-
-    // loadSprite()
-
-  //   return () => {
-  //     console.log("Some sort of cleanup here")
-  //   }
-  // }, []);
-
-  // console.log('[Game] textures', textures)
-
-  // I changed this to null as TS complained about returning a string
-  // if (!textures) {
-  //   return null;
-  // }
-
+  const snap = useSnapshot(str) as TypeGameStore;
 
   const handlePlayer2Click = (target: any) => {
-    makePlayerMove(1, target);
+    // makePlayerMove(1, target);
   }
 
   const handlePlayer1Click = (target: any) => {
-    makePlayerMove(0, target);
+    // makePlayerMove(0, target);
   }
 
   return (
     <Stage options={options} style={style}>
-      {/* <ContainerWithName
-        name={"ButtonsContainer"}
-      > */}
-        {/* <ButtonComponent
-          x={100}
-          y={100}
-          click={handleClick}
-          // width={100}
-        /> */}
-      {/* </ContainerWithName> */}
-
       <ContainerWithName
       name={'DeckContainer'}
         x={100}
       >
-        {snap.deckCards?.map((card, index, array) => {
+        {snap.deckCards?.map((card: TypeCard, index, array) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
           const cardTexture = Texture.from(cardPath);
           if (index === array.length - 1) {
@@ -151,7 +95,7 @@ export const GameStage  = () => {
         x={100}
         y={100}
       >
-        {snap.players[1].cards.map((card, index) => {
+        {snap.players[1].cards.map((card: TypeCard, index) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
           const cardTexture = Texture.from(cardPath);
 
@@ -177,7 +121,7 @@ export const GameStage  = () => {
         x={100}
         y={300}
       >
-        {snap.placedCards.map((cardsPair, index) => {
+        {snap.placedCards.map((cardsPair: TypePlacedCard, index) => {
           console.log(cardsPair)
           const cardAttacker = cardsPair.attacker as TypeCard,
                 cardDefender = cardsPair.defender? cardsPair.defender : null;
@@ -223,7 +167,7 @@ export const GameStage  = () => {
         x={100}
         y={500}
       >
-        {snap.players[0].cards.map((card, index) => {
+        {snap.players[0].cards.map((card: TypeCard, index) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
           const cardTexture = Texture.from(cardPath);
 
@@ -244,15 +188,6 @@ export const GameStage  = () => {
           />
         })}
       </ContainerWithName>
-  
-      {/* <AnimatedSprite
-        initialFrame={0}
-        isPlaying={true}
-        position={[300,75]} // changed to a Point tuple
-        // textures={Object.values(textures)}
-        interactive={true}
-        // pointerdown={toggleAnimation} */}
-      {/* /> */}
     </Stage>
   );
 }
@@ -263,3 +198,64 @@ const ContainerWithName = (props: any) => <Container {...props} />;
 
 
 
+
+// const spritesheetUrl =
+//   "https://pixijs.io/examples/examples/assets/spritesheet/fighter.json";
+
+// const ButtonComponent = PixiComponent('ButtonComponent', {
+//   create: () => new ButtonContainer(
+//     new Graphics()
+//         .beginFill(0xFFFFFF)
+//         .drawRoundedRect(0, 0, 100, 50, 15)
+// ),
+//   // applyProps: (props) => {...props}
+// });
+
+      {/* <AnimatedSprite
+        initialFrame={0}
+        isPlaying={true}
+        position={[300,75]} // changed to a Point tuple
+        // textures={Object.values(textures)}
+        interactive={true}
+        // pointerdown={toggleAnimation} */}
+      {/* /> */}
+
+            {/* <ContainerWithName
+        name={"ButtonsContainer"}
+      > */}
+        {/* <ButtonComponent
+          x={100}
+          y={100}
+          click={handleClick}
+          // width={100}
+        /> */}
+      {/* </ContainerWithName> */}
+
+      
+  // useEffect(() => {
+  //   // I use Promises for no reason other than I often work with 
+  //   // ancient hardware.
+  //   function loadSprite() {
+  //     Assets
+  //       .load(spritesheetUrl)
+  //       .then((sheet) => {
+  //         setTextures(sheet.textures);
+  //       })
+  //       .catch((err) => {
+  //         console.error('[Game][useEffect] err %o loading sheet', err)
+  //       })
+  //   }
+
+    // loadSprite()
+
+  //   return () => {
+  //     console.log("Some sort of cleanup here")
+  //   }
+  // }, []);
+
+  // console.log('[Game] textures', textures)
+
+  // I changed this to null as TS complained about returning a string
+  // if (!textures) {
+  //   return null;
+  // }
