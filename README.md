@@ -1,11 +1,21 @@
 # Durak Multiplayer Card Game Pixi-react
 
 Made with:
+
 Typescript
+
 Pixi/react
+
+PixiJS
+
+Tailwind CSS
+
 Valtio
+
 Node.js
+
 Socket.io
+
 MongoDB
 
 ### **Live game:** [http://....../](http://............/)

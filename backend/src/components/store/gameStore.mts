@@ -1,22 +1,10 @@
 import { TypeGameStore, TypeGameStatus, TypeCard, TypePlacedCard, TypePlayer, TypePlayerRole, TypePlayerStatus, TypeAction } from '../types/types.mjs';
 import { proxy, subscribe } from 'valtio/vanilla';
 import { proxyWithHistory } from 'valtio/utils';
-// import { Deck } from '../../components/Deck/Deck';
-
-// const deck = new Deck();
-
-// let deck: Deck = [];
-// const deckPromise = async () => await new Deck();
-
-// deckPromise()
-//   .then(res => {
-//     gameStore.deckCards = res.cards;
-//   })
-
 
 const player1: TypePlayer = {
-  socketId: '1',
-  playerName: 'Player 1',
+  socketId: '',
+  playerName: '',
   playerAvatar: 'Avatar 1',
   playerRole: TypePlayerRole.Attacker,
   playerStatus: TypePlayerStatus.InGame,
@@ -24,15 +12,15 @@ const player1: TypePlayer = {
 }
 
 const player2: TypePlayer = {
-  socketId: '2',
-  playerName: 'Player 2',
+  socketId: '',
+  playerName: '',
   playerAvatar: 'Avatar 2',
   playerRole: TypePlayerRole.Defender,
-  playerStatus: TypePlayerStatus.InGame,
+  playerStatus: TypePlayerStatus.Offline,
   cards: [],
 }
 
-export const gameStore = proxy<TypeGameStore>({
+export const gameStoreWithHistory = proxyWithHistory<TypeGameStore>({
   id: '1',
 
   gameStatus: TypeGameStatus.WaitingForPlayers,
@@ -52,6 +40,8 @@ export const gameStore = proxy<TypeGameStore>({
 
   lastAction: TypeAction.Undefined
 });
+
+export const gameStore = gameStoreWithHistory.value;
 
 // localStorage.setItem('gamestore', JSON.stringify(gameStore))
 

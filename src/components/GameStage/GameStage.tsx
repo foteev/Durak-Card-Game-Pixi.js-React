@@ -26,12 +26,14 @@ import {
   FancyButton,
   ButtonContainer
 } from '@pixi/ui'
-import { str } from '../utils/utils'
+import { gameStore } from "../store/gameStore";
+import './GameStage.css'
 
-const width = window.innerWidth;
-const height = window.innerHeight;
+const width = 800
+const height = 600
 const options = {
-  backgroundColor: 'green',
+  // backgroundColor: 'white',
+  transparent: true,
   resolution: window.devicePixelRatio,
   width: width,
   height: height,
@@ -43,7 +45,7 @@ const style = {
 
 export const GameStage  = () => {
 
-  const snap = useSnapshot(str) as TypeGameStore;
+  const snap = useSnapshot(gameStore) as TypeGameStore;
 
   const handlePlayer2Click = (target: any) => {
     // makePlayerMove(1, target);
@@ -54,7 +56,11 @@ export const GameStage  = () => {
   }
 
   return (
-    <Stage options={options} style={style}>
+    <Stage className='game-stage' options={options} style={style}>
+      <Sprite
+        source={'./assets/table.png'}
+      >
+      </Sprite>
       <ContainerWithName
       name={'DeckContainer'}
         x={100}
@@ -72,7 +78,6 @@ export const GameStage  = () => {
             width={50}
             height={70}
             texture={cardTexture}
-            interactive={true}
             eventMode={'static'}
           />
           }
@@ -85,7 +90,6 @@ export const GameStage  = () => {
             width={50}
             height={70}
             texture={cardTexture}
-            interactive={true}
             eventMode={'static'}
           />
         })}
@@ -108,7 +112,6 @@ export const GameStage  = () => {
             width={50}
             height={70}
             texture={cardTexture}
-            interactive={true}
             eventMode={'static'}
             click={(event: Event) => {
               handlePlayer2Click(event.target)
@@ -180,7 +183,6 @@ export const GameStage  = () => {
             width={50}
             height={70}
             texture={cardTexture}
-            interactive={true}
             eventMode={'static'}
             click={(event: Event) => {
               handlePlayer1Click(event.target)
