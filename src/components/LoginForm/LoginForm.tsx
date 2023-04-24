@@ -1,7 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import './LoginForm.css'
 import{ socket } from '../../socket'
-import { updateStore } from '../utils/utils'
 import { gameStore } from '../store/gameStore';
 
 export const LoginForm: React.FC = () => {
