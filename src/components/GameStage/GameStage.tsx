@@ -29,18 +29,20 @@ import {
 import { gameStore } from "../store/gameStore";
 import './GameStage.css'
 
-const width = 800
-const height = 600
+const width = window.innerWidth
+const height = window.innerHeight
 const options = {
-  // backgroundColor: 'white',
-  transparent: true,
   resolution: window.devicePixelRatio,
   width: width,
   height: height,
+  backGroundAlpha: 0.5,
+  autoRsize: true,
 };
 const style = {
   width: width,
   height: height,
+  // marginTop: 'auto',
+  margin: '0 auto',
 };
 
 export const GameStage  = () => {
@@ -58,6 +60,11 @@ export const GameStage  = () => {
   return (
     <Stage className='game-stage' options={options} style={style}>
       <Sprite
+        width={800}
+        height={600}
+        source={'./assets/cover.png'}
+      ></Sprite>
+      <Sprite
         source={'./assets/table.png'}
       >
       </Sprite>
@@ -72,7 +79,7 @@ export const GameStage  = () => {
             return <CardComponent
             key={card.name}
             name={card.name}
-            anchor={[0,-0.2]}
+            anchor={[0.5,-0.5]}
             x={0 + index*10}
             y={0}
             width={50}
