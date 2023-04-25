@@ -16,7 +16,15 @@ export const LoginForm: React.FC = () => {
     socket.timeout(1000).emit('player name & socket.id', {name: value, socketId: socket.id}, () => {
       setIsLoading(false);
     });
+
+    socket.on('error', (err) => {
+      console.log(err)
+      return (
+        <div>{err}</div>
+      )
+    })
   }
+
 
   return (
     <div className="login-form">

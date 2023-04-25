@@ -8,12 +8,20 @@ import { gameStore, updateStore } from './components/store/gameStore';
 import { LoginForm } from './components/LoginForm/LoginForm';
 import { SERVER_ADDRESS } from './constants'
 import { socket } from './socket';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 
 
 export const App = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [fooEvents, setFooEvents] = useState<Array<Event>>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
   const store = useSnapshot(gameStore);
 
   useEffect(() => {
@@ -31,11 +39,15 @@ export const App = () => {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('foo', onFooEvent);
+    socket.on('error', (err) => {
+      onFooEvent(err);
+      handleShow();
+    });
     socket.on('store update', (store) => {
       const st = JSON.parse(store);
       updateStore(st);
       console.log(gameStore);
+      setShowLogin(false);
     })
 
     return () => {
@@ -46,17 +58,36 @@ export const App = () => {
   }, []);
 
   return (
-    <React.Suspense fallback={<span>waiting...</span>}>
+    // <React.Suspense fallback={<span>waiting...</span>}>
       <div className="App">
         <GameStage />
+        {showLogin ? 
+          <LoginForm /> 
+          : null
+        }
+        <Modal show={showModal} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal heading</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <div className = "game_stage_buttons">
           {/* <button className="button" onClick={() => sortPlayerCards(1, 'byRank')}>Sort 1 by value</button>
           <button className="button" onClick={() => sortPlayerCards(1, 'bySuit')}>Sort 1 by suit</button>
           <button className="button" onClick={() => sortPlayerCards(2, 'byRank')}>Sort 2 by value</button>
           <button className="button" onClick={() => sortPlayerCards(2, 'bySuit')}>Sort 2 by suit</button> */}
         </div>
-        <LoginForm />
+        
       </div>
-    </React.Suspense>
+
+    // </React.Suspense>
   );
 }

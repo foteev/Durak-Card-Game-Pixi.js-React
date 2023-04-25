@@ -68,47 +68,56 @@ export const createDeck = () => {
 }
 
 
-// export const giveCards = (playerIndex: number) => {
-//   console.log('sub start')
-//   const player = gameStore.players[playerIndex] as TypePlayer;
-//   const otherPlayer = gameStore.players.find(playerX => playerX !== player) as TypePlayer;
-//   if (gameStore.gameStatus === TypeGameStatus.DrawingCards) {
-//     const player1Length = player.cards.length;
-//     const player2Length = otherPlayer.cards.length
-//     // const minCardsPlayer = player1Length > player2Length ? 
-//     if (player1Length < MAX_CARDS_IN_HAND) {
-//       if (player2Length < MAX_CARDS_IN_HAND) {
-//         for (let i = 0; i < MAX_CARDS_IN_HAND - player1Length; i++) {
-//           player.cards.push(gameStore.deckCards.shift()!);
-//           otherPlayer.cards.push(gameStore.deckCards.shift()!)
-//         }
-//       } else
-//         for (let i = 0; i < MAX_CARDS_IN_HAND - player1Length; i++) {
-//           player.cards.push(gameStore.deckCards.shift()!);
-//       }
+export const giveCards = (playerIndex: number) => {
+  console.log('sub start')
+  const player = gameStore.players[playerIndex] as TypePlayer;
+  const otherPlayer = gameStore.players.find(playerX => playerX !== player) as TypePlayer;
+  if (gameStore.gameStatus === TypeGameStatus.DrawingCards) {
+    const minHand = Math.min(player.cards.length, otherPlayer.cards.length)
+    const length1 = player.cards.length;
+    const length2 = otherPlayer.cards.length;
 
-//       // if (player.playerRole === TypePlayerRole.Attacker)
-//       if (gameStore.deckCards[0]) {
-//         for (let i = 0; i < gameStore.deckCards.length; i++) {
-//           if (i < player1Length && gameStore.deckCards[1]) {
+    // const minCardsPlayer = player1Length > player2Length ? 
+    // if (length1 < MAX_CARDS_IN_HAND && length1) {
+    //   if (player2Length < MAX_CARDS_IN_HAND) {
+    for (let i = 0; i < MAX_CARDS_IN_HAND - minHand; i++) {
+      if (gameStore.deckCards[0] !== undefined) {
+        if (length1 < MAX_CARDS_IN_HAND)
+          player.cards.push(gameStore.deckCards.shift()!);
+        if (length2 < MAX_CARDS_IN_HAND)
+          otherPlayer.cards.push(gameStore.deckCards.shift()!)
+      }
+    }
 
-//           } else player.cards.push(gameStore.deckCards.shift()!)
-//         }
-//       }
-//     }
-//     for (let i = 0; i <= 11; i++) {
-//       if (i % 2 === 0) {
-//         // if (gameStore.deckCards[0]) {
-//           gameStore.players[0].cards.push(gameStore.deckCards.shift()!);
-//         // } else {
-//           gameStore.players[1].cards.push(gameStore.deckCards.shift()!);
-//         // }
-//       }
-//     }
-//   }
-//   gameStore.gameStatus = TypeGameStatus.GameInProgress
-//   console.log('subs draw')
-// }
+  }
+  gameStore.gameStatus = TypeGameStatus.GameInProgress
+  console.log('subs draw')
+}
+    //     }
+    //   } else
+    //     for (let i = 0; i < MAX_CARDS_IN_HAND - player1Length; i++) {
+    //       player.cards.push(gameStore.deckCards.shift()!);
+    //   }
+
+    //   // if (player.playerRole === TypePlayerRole.Attacker)
+    //   if (gameStore.deckCards[0]) {
+    //     for (let i = 0; i < gameStore.deckCards.length; i++) {
+    //       if (i < player1Length && gameStore.deckCards[1]) {
+
+    //       } else player.cards.push(gameStore.deckCards.shift()!)
+    //     }
+    //   }
+    // }
+    // for (let i = 0; i <= 11; i++) {
+    //   if (i % 2 === 0) {
+    //     // if (gameStore.deckCards[0]) {
+    //       gameStore.players[0].cards.push(gameStore.deckCards.shift()!);
+    //     // } else {
+    //       gameStore.players[1].cards.push(gameStore.deckCards.shift()!);
+    //     // }
+    //   }
+    // }
+
 
 // export const makePlayerMove = (playerIndex: number, card: TypeCard) => {
 

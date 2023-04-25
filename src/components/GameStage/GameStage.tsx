@@ -29,8 +29,9 @@ import {
 import { gameStore } from "../store/gameStore";
 import './GameStage.css'
 
-const width = window.innerWidth
-const height = window.innerHeight
+const width = 1280
+const height = 720
+
 const options = {
   resolution: window.devicePixelRatio,
   width: width,
@@ -60,11 +61,12 @@ export const GameStage  = () => {
   return (
     <Stage className='game-stage' options={options} style={style}>
       <Sprite
-        width={800}
-        height={600}
+        width={1280}
+        height={720}
         source={'./assets/cover.png'}
       ></Sprite>
       <Sprite
+        scale={1}
         source={'./assets/table.png'}
       >
       </Sprite>
