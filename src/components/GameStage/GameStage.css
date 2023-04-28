@@ -1,9 +1,11 @@
 .game-stage {
-  position: absolute;
-  /* top: 25px; */
+  /* position: absolute; */
+  top: 25px;
   margin-left: auto;
   margin-right: auto;
   left: 0;
   right: 0;
+  top: 50px;
   text-align: center;
+  /* z-index: 1; */
 }

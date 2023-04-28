@@ -19,6 +19,7 @@ export const App = () => {
   const [playerIndex, setPlayerIndex] = useState(0);
   const [showButtons, setShowButtons] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showGameStage, setShowGameStage] = useState(false);
   const [error, setError] = useState('');
   const store = useSnapshot(gameStore);
 
@@ -28,6 +29,7 @@ export const App = () => {
       setError(err);
       setShowModal(true);
       setShowLogin(true);
+      setShowGameStage(false);
     });
 
     socket.on('player enter', storeJ => {
@@ -57,7 +59,9 @@ export const App = () => {
   return (
     <React.Suspense fallback={<span>waiting...</span>}>
       <div className="App">
-        <GameStage playerIndex={playerIndex} />
+        {/* {showGameStage ? */}
+          <GameStage playerIndex={playerIndex} />
+          {/* : null } */}
         {showLogin ?
           <LoginForm />
           : null}
@@ -66,8 +70,6 @@ export const App = () => {
           : null}
         <Buttons playerIndex={playerIndex} />
       </div>
-
-
     </React.Suspense>
   );
 }

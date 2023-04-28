@@ -109,9 +109,10 @@ const makeAttackingMove = (playerIndex: number, card: TypeCard) => {
 
 const makeDefendingMove = (playerIndex: number, card: TypeCard) => {
   console.log('check def')
-  if (typeof(gameStore.placedCards[gameStore.placedCards.length - 1].defender) !== 'undefined') {
+  if (typeof(gameStore.placedCards[gameStore.placedCards.length - 1].attacker) !== 'undefined') {
     console.log('start def move')
     // const placedCard = { defender:card } as TypePlacedCard
+    console.log(gameStore.placedCards[gameStore.placedCards.length - 1].defender)
     gameStore.placedCards[gameStore.placedCards.length - 1].defender = card;
     gameStore.lastAction = TypeAction.DefenderMoveCard
   }

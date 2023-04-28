@@ -46,7 +46,7 @@ const startServer = async () => {
     try {
         mongoose.set('strictQuery', true);
         mongoose.connect(DB_URL);
-        httpServer.listen(PORT, () => console.log('Its work WOW! Port: ', PORT));
+        httpServer.listen(PORT, () => console.log('It works, WOW! Port: ', PORT));
     } catch (error) {
         console.error(error);
     }

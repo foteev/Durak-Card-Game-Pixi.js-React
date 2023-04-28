@@ -34,9 +34,10 @@ export const SocketManager = (socket: any) => {
       players[1].playerStatus = TypePlayerStatus.InGame
 
       socket.to(players[0].socketId).emit('player enter', JSON.stringify(gameStore));
-    } else socket.emit('error', 'The room is full');
-
-    socket.emit('player enter', JSON.stringify(gameStore));
+      socket.emit('player enter', JSON.stringify(gameStore));
+    } else {
+      socket.emit('error', 'The room is full');
+    }
 
   })
 

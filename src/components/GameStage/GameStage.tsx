@@ -30,26 +30,28 @@ import { gameStore } from "../store/gameStore";
 import './GameStage.css'
 import { playerMove, checkIfAvailable } from '../utils/utils';
 
-const width = 1280
-const height = 600
-
-const cardWidth = 100
-const cardHeight = 140
+const width = window.innerWidth
+const height = window.innerHeight
+const cardWidth = height / 10;
+const cardHeight = width / 10;
+const cardGap = cardWidth * 0.7
 
 const options = {
-  backgroundColor: '#8F754F',
+  backgroundColor: 0xFFFFFF,
   resolution: window.devicePixelRatio,
   width: width,
   height: height,
-  backGroundAlpha: 0.5,
+  // BackgroundAlpha: 0,
+  backgroundAlpha: 0,
+  // backGroundAlpha: 0,
   autoResize: true,
 };
-const style = {
-  width: width,
-  height: height,
-  // marginTop: 'auto',
-  margin: '0 auto',
-};
+// const style = {
+//   width: width,
+//   height: height,
+//   // marginTop: 'auto',
+//   margin: '',
+// };
 
 type Props = {
   playerIndex: number
@@ -58,15 +60,11 @@ type Props = {
 export const GameStage  = (props: Props) => {
 
   const playerIndex = props.playerIndex;
-  console.log(playerIndex)
+  console.log('playerIndex ', playerIndex)
 
   const snap = useSnapshot(gameStore) as TypeGameStore;
 
-  const handlePlayer2Click = (target: any) => {
-    // makePlayerMove(1, target);
-  }
-
-  const handlePlayer1Click = (target: any) => {
+  const handlePlayerClick = (target: any) => {
     console.log('click')
     playerMove(playerIndex, target);
   }
@@ -74,7 +72,7 @@ export const GameStage  = (props: Props) => {
   const filter = new PIXI.filters.ColorMatrixFilter
 
   return (
-    <Stage className='game-stage' options={options} style={style}>
+    <Stage className='game-stage' options={options}>
       {/* <Sprite
         width={1280}
         height={600}
@@ -110,7 +108,7 @@ export const GameStage  = (props: Props) => {
             key={card.name}
             name={card.name}
             anchor={0}
-            x={0 + index*20}
+            x={0 + index*cardGap}
             y={0}
             width={cardWidth}
             height={cardHeight}
@@ -141,9 +139,6 @@ export const GameStage  = (props: Props) => {
             height={cardHeight}
             texture={cardTexture}
             eventMode={'static'}
-            click={(event: Event) => {
-              handlePlayer2Click(event.target)
-            }}
           />
         })}
       </ContainerWithName>
@@ -214,7 +209,7 @@ export const GameStage  = (props: Props) => {
             tint={checkIfAvailable(playerIndex, card) ? '0xFFFFFF' : '0x505050'}
             eventMode={'static'}
             click={(event: Event) => {
-              handlePlayer1Click(event.target)
+              handlePlayerClick(event.target)
             }}
           />
         })}

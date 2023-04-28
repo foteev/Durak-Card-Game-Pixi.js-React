@@ -28,7 +28,7 @@ export const LoginForm: React.FC = () => {
               src="./assets/logo1.png?color=indigo&shade=600"
               alt="Your Company"
             />
-            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white-900">
               Enter your name
             </h2>
           </div>
