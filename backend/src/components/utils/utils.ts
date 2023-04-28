@@ -1,4 +1,4 @@
-import { gameStore } from '../store/gameStore.mjs';
+import { gameStore, gameStoreWithHistory } from '../store/gameStore.mjs';
 // import { subscribe, useSnapshot } from "valtio/vanilla";
 import {
   TypeCard,
@@ -68,86 +68,63 @@ export const createDeck = () => {
 }
 
 
-export const giveCards = (playerIndex: number) => {
-  console.log('sub start')
-  const player = gameStore.players[playerIndex] as TypePlayer;
-  const otherPlayer = gameStore.players.find(playerX => playerX !== player) as TypePlayer;
-  if (gameStore.gameStatus === TypeGameStatus.DrawingCards) {
-    const minHand = Math.min(player.cards.length, otherPlayer.cards.length)
-    const length1 = player.cards.length;
-    const length2 = otherPlayer.cards.length;
-
-    // const minCardsPlayer = player1Length > player2Length ? 
-    // if (length1 < MAX_CARDS_IN_HAND && length1) {
-    //   if (player2Length < MAX_CARDS_IN_HAND) {
+export const giveCards = () => {
+  const attacker = gameStore.players.filter(player => player.playerRole === TypePlayerRole.Attacker)[0];
+  const defender = gameStore.players.filter(player => player.playerRole === TypePlayerRole.Defender)[0];
+    const length1 = attacker.cards.length;
+    const length2 = defender.cards.length;
+    const minHand = Math.min(length1, length2)
     for (let i = 0; i < MAX_CARDS_IN_HAND - minHand; i++) {
-      if (gameStore.deckCards[0] !== undefined) {
+      if (gameStore.deckCards[0]) {
         if (length1 < MAX_CARDS_IN_HAND)
-          player.cards.push(gameStore.deckCards.shift()!);
+          attacker.cards.push(gameStore.deckCards.shift()!);
+      }
+      if (gameStore.deckCards[0]) {
         if (length2 < MAX_CARDS_IN_HAND)
-          otherPlayer.cards.push(gameStore.deckCards.shift()!)
+          defender.cards.push(gameStore.deckCards.shift()!)
       }
     }
-
-  }
   gameStore.gameStatus = TypeGameStatus.GameInProgress
   console.log('subs draw')
 }
-    //     }
-    //   } else
-    //     for (let i = 0; i < MAX_CARDS_IN_HAND - player1Length; i++) {
-    //       player.cards.push(gameStore.deckCards.shift()!);
-    //   }
 
-    //   // if (player.playerRole === TypePlayerRole.Attacker)
-    //   if (gameStore.deckCards[0]) {
-    //     for (let i = 0; i < gameStore.deckCards.length; i++) {
-    //       if (i < player1Length && gameStore.deckCards[1]) {
+export const makePlayerMove = (playerIndex: number, cardName: string) => {
+  const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
+  const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
+  if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker) {
+    makeAttackingMove(playerIndex, card);
+  } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Defender) {
+    makeDefendingMove(playerIndex, card);
+  }
+}
 
-    //       } else player.cards.push(gameStore.deckCards.shift()!)
-    //     }
-    //   }
-    // }
-    // for (let i = 0; i <= 11; i++) {
-    //   if (i % 2 === 0) {
-    //     // if (gameStore.deckCards[0]) {
-    //       gameStore.players[0].cards.push(gameStore.deckCards.shift()!);
-    //     // } else {
-    //       gameStore.players[1].cards.push(gameStore.deckCards.shift()!);
-    //     // }
-    //   }
-    // }
+const makeAttackingMove = (playerIndex: number, card: TypeCard) => {
+  console.log('start att move')
+  const placedCard = { attacker:card } as TypePlacedCard
+  gameStore.placedCards.push(placedCard);
+  console.log(gameStore.placedCards)
+}
 
+const makeDefendingMove = (playerIndex: number, card: TypeCard) => {
+  console.log('check def')
+  if (!gameStore.placedCards[gameStore.placedCards.length - 1].defender) {
+    console.log('start def move')
+    // const placedCard = { defender:card } as TypePlacedCard
+    gameStore.placedCards[gameStore.placedCards.length - 1].defender = card;
+  }
+}
 
-// export const makePlayerMove = (playerIndex: number, card: TypeCard) => {
-
-//   if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker) {
-//     makeAttackingMove(playerIndex, card.name);
-//   } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Defender) {
-//     makeDefendingMove(playerIndex, card.name);
-
-//   }
-// }
-
-// const makeAttackingMove = (playerIndex: number, cardName: string) => {
-//   console.log('start att move')
-//   const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
-//   const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
-//   const placedCard = { attacker:card } as TypePlacedCard
-//   gameStore.placedCards.push(placedCard);
-//   console.log(gameStore.placedCards)
-// }
-
-// const makeDefendingMove = (playerIndex: number, cardName: string) => {
-//   if (!gameStore.placedCards[gameStore.placedCards.length - 1].defender) {
-//     console.log('start def move')
-//     const cardIndex: number = gameStore.players[playerIndex].cards.indexOf(gameStore.players[playerIndex].cards.filter(card => card.name === cardName as string)[0]);
-//     const card: TypeCard = gameStore.players[playerIndex].cards.splice(cardIndex, 1)[0] as TypeCard;
-//     // const placedCard = { defender:card } as TypePlacedCard
-//     gameStore.placedCards[gameStore.placedCards.length - 1].defender = card;
-//   }
-
-// }
+export const undoGameStore = (playerIndex: number) => {
+  const lastSnapshot = gameStoreWithHistory.history.snapshots[gameStoreWithHistory.history.index- 1] as TypeGameStore;
+  console.log(lastSnapshot)
+  console.log(gameStore.players[0].cards)
+  if (gameStore.players[0].cards) {
+    gameStore.players[0].cards = [ ...lastSnapshot.players[0].cards! ]
+  }
+  if (gameStore.placedCards) {
+    gameStore.placedCards = lastSnapshot.placedCards;
+  }
+}
 
 // export const sortPlayerCards = (player: number, type: string) => {
 //   switch (type) {

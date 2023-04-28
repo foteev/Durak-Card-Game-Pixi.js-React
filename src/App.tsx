@@ -8,86 +8,66 @@ import { gameStore, updateStore } from './components/store/gameStore';
 import { LoginForm } from './components/LoginForm/LoginForm';
 import { SERVER_ADDRESS } from './constants'
 import { socket } from './socket';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import { Modal } from './components/Modal/Modal';
+import { Buttons } from './components/Buttons/Buttons';
 
 
 
 export const App = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [fooEvents, setFooEvents] = useState<Array<Event>>([]);
-  const [showModal, setShowModal] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
+  const [playerIndex, setPlayerIndex] = useState(0);
+  const [showButtons, setShowButtons] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
+  const handleModalClose = () => setShowModal(false);
+  const handleModalShow = () => setShowModal(true);
 
   const store = useSnapshot(gameStore);
 
   useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
 
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function onFooEvent(value: Event) {
-      setFooEvents(previous => [...previous, value]);
-    }
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
     socket.on('error', (err) => {
-      onFooEvent(err);
-      handleShow();
+      console.log(err)
+      handleModalShow();
     });
-    socket.on('store update', (store) => {
-      const st = JSON.parse(store);
-      updateStore(st);
-      console.log(gameStore);
+  
+    socket.on('player enter', storeJ => {
+      const st = JSON.parse(storeJ);
+      if (st.players[1].playerName.length === 0) {
+        updateStore(st);
+      } else if (st.players[1].playerName.length !== 0 
+        && gameStore.players[0].playerName.length === 0) {
+          setPlayerIndex(1);
+          updateStore(st);
+      }
       setShowLogin(false);
+      console.log('cards: ', gameStore.players[0].cards, gameStore.players[1].cards);
+    })
+  
+    socket.on('store update', (storeJ) => {
+      const st = JSON.parse(storeJ);
+      updateStore(st);
     })
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-      socket.off('foo', onFooEvent);
+      // socket.off('connect', onConnect);
     };
   }, []);
 
   return (
-    // <React.Suspense fallback={<span>waiting...</span>}>
+    <React.Suspense fallback={<span>waiting...</span>}>
       <div className="App">
-        <GameStage />
-        {showLogin ? 
-          <LoginForm /> 
+        <GameStage playerIndex={playerIndex} />
+        {showLogin ?
+          <LoginForm />
           : null
         }
-        <Modal show={showModal} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <div className = "game_stage_buttons">
-          {/* <button className="button" onClick={() => sortPlayerCards(1, 'byRank')}>Sort 1 by value</button>
-          <button className="button" onClick={() => sortPlayerCards(1, 'bySuit')}>Sort 1 by suit</button>
-          <button className="button" onClick={() => sortPlayerCards(2, 'byRank')}>Sort 2 by value</button>
-          <button className="button" onClick={() => sortPlayerCards(2, 'bySuit')}>Sort 2 by suit</button> */}
-        </div>
-        
+        <Modal showModal={showModal} />
+        <Buttons playerIndex={playerIndex} />
       </div>
 
-    // </React.Suspense>
+
+    </React.Suspense>
   );
 }

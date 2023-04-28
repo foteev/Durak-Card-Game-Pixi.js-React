@@ -43,8 +43,9 @@ export const gameStoreWithHistory = proxyWithHistory<TypeGameStore>({
 
 export const gameStore = gameStoreWithHistory.value;
 
+
 // localStorage.setItem('gamestore', JSON.stringify(gameStore))
 
-// subscribe(gameStore, () => {
-//   localStorage.setItem('gamestore', JSON.stringify(gameStore))
-// });
+subscribe(gameStore, () => {
+  console.log('store changed')
+});

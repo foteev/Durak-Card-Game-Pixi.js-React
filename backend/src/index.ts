@@ -57,8 +57,4 @@ startServer();
 const snap = snapshot(gameStore);
 createDeck();
 
-subscribe(gameStore, () => {
-    console.log('store mutate');
-})
-
 io.on('connection', SocketManager);

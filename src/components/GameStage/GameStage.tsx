@@ -28,16 +28,18 @@ import {
 } from '@pixi/ui'
 import { gameStore } from "../store/gameStore";
 import './GameStage.css'
+import { playerMove, checkIfAvailable } from '../utils/utils';
 
 const width = 1280
-const height = 720
+const height = 600
 
 const options = {
+  backgroundColor: '#8F754F',
   resolution: window.devicePixelRatio,
   width: width,
   height: height,
   backGroundAlpha: 0.5,
-  autoRsize: true,
+  autoResize: true,
 };
 const style = {
   width: width,
@@ -46,7 +48,14 @@ const style = {
   margin: '0 auto',
 };
 
-export const GameStage  = () => {
+type Props = {
+  playerIndex: number
+}
+
+export const GameStage  = (props: Props) => {
+
+  const playerIndex = props.playerIndex;
+  console.log(playerIndex)
 
   const snap = useSnapshot(gameStore) as TypeGameStore;
 
@@ -55,21 +64,25 @@ export const GameStage  = () => {
   }
 
   const handlePlayer1Click = (target: any) => {
-    // makePlayerMove(0, target);
+    console.log('click')
+    playerMove(playerIndex, target);
   }
+
+  const filter = new PIXI.filters.ColorMatrixFilter
 
   return (
     <Stage className='game-stage' options={options} style={style}>
-      <Sprite
+      {/* <Sprite
         width={1280}
-        height={720}
+        height={600}
         source={'./assets/cover.png'}
-      ></Sprite>
-      <Sprite
-        scale={1}
+        scale={2}
+      ></Sprite> */}
+      {/* <Sprite
+        // scale={1}
         source={'./assets/table.png'}
-      >
-      </Sprite>
+      > */}
+      {/* </Sprite> */}
       <ContainerWithName
       name={'DeckContainer'}
         x={100}
@@ -108,7 +121,10 @@ export const GameStage  = () => {
         x={100}
         y={100}
       >
-        {snap.players[1].cards.map((card: TypeCard, index) => {
+        {snap.players
+        .filter((player, index) => index !== playerIndex)[0]
+        .cards
+        .map((card: TypeCard, index) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
           const cardTexture = Texture.from(cardPath);
 
@@ -179,7 +195,7 @@ export const GameStage  = () => {
         x={100}
         y={500}
       >
-        {snap.players[0].cards.map((card: TypeCard, index) => {
+        {snap.players[playerIndex].cards.map((card: TypeCard, index) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
           const cardTexture = Texture.from(cardPath);
 
@@ -192,6 +208,7 @@ export const GameStage  = () => {
             width={50}
             height={70}
             texture={cardTexture}
+            tint={checkIfAvailable(playerIndex, card) ? '0xFFFFFF' : '0x505050'}
             eventMode={'static'}
             click={(event: Event) => {
               handlePlayer1Click(event.target)
