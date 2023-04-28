@@ -3,6 +3,7 @@ import { gameStore, gameStoreWithHistory } from "../store/gameStore.mjs";
 import { TypeGameStatus, TypePlayerRole, TypePlayerStatus } from "components/types/types.mjs";
 // import { io } from "../../index.js";
 import { giveCards, makePlayerMove, createDeck, undoGameStore } from "./utils.js";
+import { subscribe } from "valtio";
 
 export const SocketManager = (socket: any) => {
 
@@ -47,13 +48,14 @@ export const SocketManager = (socket: any) => {
     // })
   })
 
-  socket.on('undo', (message: {playerIndex: number}) => {
-    console.log(gameStore.players[0].playerName)
+  socket.on('undo', (message: { playerIndex: number }) => {
     undoGameStore(message.playerIndex);
-    console.log(gameStore.players[0].playerName)
-    console.log(gameStore.players[0].cards)
   })
 
-  socket.to(players[0].socketId).emit('store update', JSON.stringify(gameStore));
-  socket.to(players[1].socketId).emit('store update', JSON.stringify(gameStore));  
+  subscribe(gameStore, () => {
+    socket.to(players[0].socketId).emit('store update', JSON.stringify(gameStore));
+    socket.to(players[1].socketId).emit('store update', JSON.stringify(gameStore));
+    console.log('state sended')
+  })
+  
 }

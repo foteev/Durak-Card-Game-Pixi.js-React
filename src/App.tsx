@@ -19,19 +19,17 @@ export const App = () => {
   const [playerIndex, setPlayerIndex] = useState(0);
   const [showButtons, setShowButtons] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-  const handleModalClose = () => setShowModal(false);
-  const handleModalShow = () => setShowModal(true);
-
+  const [error, setError] = useState('');
   const store = useSnapshot(gameStore);
 
   useEffect(() => {
-
-    socket.on('error', (err) => {
+    socket.on('error', (err: string) => {
       console.log(err)
-      handleModalShow();
+      setError(err);
+      setShowModal(true);
+      setShowLogin(true);
     });
-  
+
     socket.on('player enter', storeJ => {
       const st = JSON.parse(storeJ);
       if (st.players[1].playerName.length === 0) {
@@ -44,10 +42,11 @@ export const App = () => {
       setShowLogin(false);
       console.log('cards: ', gameStore.players[0].cards, gameStore.players[1].cards);
     })
-  
+
     socket.on('store update', (storeJ) => {
       const st = JSON.parse(storeJ);
       updateStore(st);
+      console.log(store);
     })
 
     return () => {
@@ -61,9 +60,10 @@ export const App = () => {
         <GameStage playerIndex={playerIndex} />
         {showLogin ?
           <LoginForm />
-          : null
-        }
-        <Modal showModal={showModal} />
+          : null}
+        {showModal ?
+          <Modal showModal={showModal} error={error}/>
+          : null}
         <Buttons playerIndex={playerIndex} />
       </div>
 

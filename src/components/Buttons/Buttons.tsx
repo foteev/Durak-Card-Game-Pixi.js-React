@@ -12,6 +12,7 @@ import {
 export const Buttons = (props: any) => {
 
   const playerIndex = props.playerIndex
+  console.log(playerIndex);
 
   const handleUndoClick = () => {
     socket.emit('undo', playerIndex);
@@ -27,7 +28,7 @@ export const Buttons = (props: any) => {
         <Button className="flex items-center gap-3" onClick={handleUndoClick}>
           <ArrowPathIcon strokeWidth={2} className="h-5 w-5" /> Undo turn
         </Button>
-        <Button variant="gradient" className="flex items-center gap-3">
+        {/* <Button variant="gradient" className="flex items-center gap-3">
           <CloudArrowUpIcon strokeWidth={2} className="h-5 w-5" /> Upload Files
         </Button>
         <Button variant="outlined" className="flex items-center gap-3">
@@ -36,7 +37,7 @@ export const Buttons = (props: any) => {
         </Button>
         <Button variant="text" className="flex items-center gap-2">
           Read More <ArrowLongRightIcon strokeWidth={2} className="h-5 w-5" />
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

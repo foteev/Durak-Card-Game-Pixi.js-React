@@ -10,6 +10,7 @@ import {
   TypeCardRank,
   TypeCardSuit,
   TypeGameStore,
+  TypeAction
 } from "../types/types.mjs";
 // import { MaskedFrame } from "@pixi/ui";
 
@@ -102,27 +103,34 @@ const makeAttackingMove = (playerIndex: number, card: TypeCard) => {
   console.log('start att move')
   const placedCard = { attacker:card } as TypePlacedCard
   gameStore.placedCards.push(placedCard);
+  gameStore.lastAction = TypeAction.AttackerMoveCard
   console.log(gameStore.placedCards)
 }
 
 const makeDefendingMove = (playerIndex: number, card: TypeCard) => {
   console.log('check def')
-  if (!gameStore.placedCards[gameStore.placedCards.length - 1].defender) {
+  if (typeof(gameStore.placedCards[gameStore.placedCards.length - 1].defender) !== 'undefined') {
     console.log('start def move')
     // const placedCard = { defender:card } as TypePlacedCard
     gameStore.placedCards[gameStore.placedCards.length - 1].defender = card;
+    gameStore.lastAction = TypeAction.DefenderMoveCard
   }
 }
 
 export const undoGameStore = (playerIndex: number) => {
+  //is not working:
+  // gameStoreWithHistory.undo();
+
+  //is working
   const lastSnapshot = gameStoreWithHistory.history.snapshots[gameStoreWithHistory.history.index- 1] as TypeGameStore;
-  console.log(lastSnapshot)
-  console.log(gameStore.players[0].cards)
-  if (gameStore.players[0].cards) {
-    gameStore.players[0].cards = [ ...lastSnapshot.players[0].cards! ]
-  }
+    gameStore.players[0].cards = [...lastSnapshot.players[0].cards!];
+    gameStore.players[1].cards = [...lastSnapshot.players[1].cards!];
+    console.log(gameStore.players[0].cards)
+    console.log(gameStore.players[1].cards)
+
   if (gameStore.placedCards) {
     gameStore.placedCards = lastSnapshot.placedCards;
+    console.log(gameStore.placedCards);
   }
 }
 

@@ -33,6 +33,9 @@ import { playerMove, checkIfAvailable } from '../utils/utils';
 const width = 1280
 const height = 600
 
+const cardWidth = 100
+const cardHeight = 140
+
 const options = {
   backgroundColor: '#8F754F',
   resolution: window.devicePixelRatio,
@@ -97,8 +100,8 @@ export const GameStage  = (props: Props) => {
             anchor={[0.5,-0.5]}
             x={0 + index*10}
             y={0}
-            width={50}
-            height={70}
+            width={cardWidth}
+            height={cardHeight}
             texture={cardTexture}
             eventMode={'static'}
           />
@@ -109,8 +112,8 @@ export const GameStage  = (props: Props) => {
             anchor={0}
             x={0 + index*20}
             y={0}
-            width={50}
-            height={70}
+            width={cardWidth}
+            height={cardHeight}
             texture={cardTexture}
             eventMode={'static'}
           />
@@ -134,8 +137,8 @@ export const GameStage  = (props: Props) => {
             anchor={0}
             x={0 + index*30}
             y={0}
-            width={50}
-            height={70}
+            width={cardWidth}
+            height={cardHeight}
             texture={cardTexture}
             eventMode={'static'}
             click={(event: Event) => {
@@ -171,8 +174,8 @@ export const GameStage  = (props: Props) => {
               anchor={0}
               x={0 + index*50}
               y={0}
-              width={50}
-              height={70}
+              width={cardWidth}
+              height={cardHeight}
               texture={cardAttackerTexture}
             />
             {cardDefender ? (
@@ -182,8 +185,8 @@ export const GameStage  = (props: Props) => {
               anchor={-0.2}
               x={0 + index*50}
               y={0}
-              width={50}
-              height={70}
+              width={cardWidth}
+              height={cardHeight}
               texture={cardDefenderTexture}
             />
             ) : null }
@@ -205,8 +208,8 @@ export const GameStage  = (props: Props) => {
             anchor={0}
             x={0 + index*30}
             y={0}
-            width={50}
-            height={70}
+            width={cardWidth}
+            height={cardHeight}
             texture={cardTexture}
             tint={checkIfAvailable(playerIndex, card) ? '0xFFFFFF' : '0x505050'}
             eventMode={'static'}
