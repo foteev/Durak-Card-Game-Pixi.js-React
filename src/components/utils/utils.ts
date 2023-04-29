@@ -1,44 +1,53 @@
 import { gameStore } from "../store/gameStore";
 import { socket } from "../../socket";
-import { TypePlacedCard, TypePlayerRole, TypeCard, TypePlayer } from "../../types/types";
+import { TypePlacedCard, TypePlayerRole, TypeCard, TypePlayer, TypeGameStatus, TypeGameStore } from "../../types/types";
+import { snapshot } from "valtio/vanilla";
 
 export const playerMove = (playerIndex: number, target: any) => {
-  console.log(checkIfAvailable(playerIndex, target.name))
   const card = gameStore.players[playerIndex].cards.filter((c: TypeCard) => c.name === target.name)[0];
-  console.log(target)
   if (checkIfAvailable(playerIndex, card)) {
     socket.emit('player move', { playerIndex: playerIndex, card: target.name})
-    console.log('emitted ', { playerIndex: playerIndex, card: target.name});
   }
 };
 
 export const checkIfAvailable = (playerIndex: number, card: TypeCard): boolean => {
-  const players = gameStore.players as Array<TypePlayer>
-  const placedCards = gameStore.placedCards as Array<TypePlacedCard>
-  console.log(placedCards)
-  console.log(gameStore.players[playerIndex].playerRole)
-  if (players[playerIndex].playerRole === TypePlayerRole.Attacker && placedCards.length !== 0) {
-    return placedCards.some(placedCard =>
-      card.rank === placedCard.attacker.rank
-    )
-  } else if (players[playerIndex].playerRole === TypePlayerRole.Attacker && placedCards.length === 0) {
+  if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker && gameStore.placedCards.length !== 0) {
+    let count = 0;
+    gameStore.placedCards.forEach((placedCard: TypePlacedCard) => {
+      if (placedCard.attacker.rank === card.rank) {
+        count++
+      }
+      if (placedCard.defender) {
+        if (placedCard.defender.rank === card.rank) {
+          count++
+        }
+      }
+    })
+    return Boolean(count);
+    
+  } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker && gameStore.placedCards.length === 0) {
     return true;
-  } else if (players[playerIndex].playerRole === TypePlayerRole.Defender && placedCards.length !== 0) {
-    console.log(checkCardRank(card))
+  } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Defender && gameStore.placedCards.length !== 0) {
     return checkCardRank(card);
   } else return false;
 }
 
 const checkCardRank = (playerCard: TypeCard): boolean => {
-    const placedCards = gameStore.placedCards as Array<TypePlacedCard>;
 
+
+  const placedCards = gameStore.placedCards as Array<TypePlacedCard>
     if (placedCards.length !== 0) {
-      const placedCard = gameStore.placedCards[placedCards.length - 1].attacker as TypeCard;
-      console.log(playerCard.rank, placedCard)
-      if (
-        (playerCard.rank > placedCard.rank && playerCard.suit === placedCard.suit)
-        || (playerCard.isTrump && !placedCard.isTrump)
-      ) return true;
+      let count = 0;
+      placedCards.forEach((placedCard) => {
+        if (placedCard.defender === undefined) {
+          if ((playerCard.rank > placedCard.attacker.rank && playerCard.suit === placedCard.attacker.suit)
+            || (playerCard.isTrump && !placedCard.attacker.isTrump)) {
+              count++;
+          }
+
+        }
+      })
+      return Boolean(count);
     }
   return false;
 }

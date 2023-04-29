@@ -2,6 +2,7 @@ import React, { FormEvent, useState } from 'react';
 import './LoginForm.css'
 import{ socket } from '../../socket'
 import { gameStore } from '../store/gameStore';
+import { Modal } from '../Modal/Modal';
 
 export const LoginForm: React.FC = () => {
   // const { socket } = props;
@@ -28,7 +29,7 @@ export const LoginForm: React.FC = () => {
               src="./assets/logo1.png?color=indigo&shade=600"
               alt="Your Company"
             />
-            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white-900">
+            <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
               Enter your name
             </h2>
           </div>
@@ -49,10 +50,19 @@ export const LoginForm: React.FC = () => {
               </div>
 
               <div>
-                <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
+                    <button 
+                      type="submit"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                      Enter room
+                    </button>
+                    <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" target="_blank" href="https://www.pagat.com/beating/podkidnoy_durak.html">
+                      Don't know rules?
+                    </a>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -60,7 +70,7 @@ export const LoginForm: React.FC = () => {
                 >
                 Enter room
                 </button>
-              </div>
+              </div> */}
             </form>
 
 

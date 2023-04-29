@@ -1,3 +1,4 @@
-.buttons-container {
-  z-index: 1000;
+.buttons-block {
+  margin: 0 auto;
+  left: 300px;
 }

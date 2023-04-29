@@ -32,26 +32,21 @@ import { playerMove, checkIfAvailable } from '../utils/utils';
 
 const width = window.innerWidth
 const height = window.innerHeight
-const cardWidth = height / 10;
-const cardHeight = width / 10;
-const cardGap = cardWidth * 0.7
+const cardHeight = width / 8;
+const cardWidth = 63/88 * cardHeight;
+const cardGap = cardWidth * 0.8
+const coefficient = 30;
 
 const options = {
   backgroundColor: 0xFFFFFF,
   resolution: window.devicePixelRatio,
-  width: width,
-  height: height,
-  // BackgroundAlpha: 0,
   backgroundAlpha: 0,
-  // backGroundAlpha: 0,
   autoResize: true,
 };
-// const style = {
-//   width: width,
-//   height: height,
-//   // marginTop: 'auto',
-//   margin: '',
-// };
+const style = {
+  width: width,
+  height: height,
+};
 
 type Props = {
   playerIndex: number
@@ -60,25 +55,15 @@ type Props = {
 export const GameStage  = (props: Props) => {
 
   const playerIndex = props.playerIndex;
-  console.log('playerIndex ', playerIndex)
-
   const snap = useSnapshot(gameStore) as TypeGameStore;
-
   const handlePlayerClick = (target: any) => {
     console.log('click')
     playerMove(playerIndex, target);
   }
-
   const filter = new PIXI.filters.ColorMatrixFilter
 
   return (
-    <Stage className='game-stage' options={options}>
-      {/* <Sprite
-        width={1280}
-        height={600}
-        source={'./assets/cover.png'}
-        scale={2}
-      ></Sprite> */}
+    <Stage width={window.innerWidth} height={window.innerHeight - 48} className='game-stage' options={options} style={style}>
       {/* <Sprite
         // scale={1}
         source={'./assets/table.png'}
@@ -86,21 +71,22 @@ export const GameStage  = (props: Props) => {
       {/* </Sprite> */}
       <ContainerWithName
       name={'DeckContainer'}
-        x={100}
+        y={height / 2}
       >
         {snap.deckCards?.map((card: TypeCard, index, array) => {
-          const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
-          const cardTexture = Texture.from(cardPath);
+          
+          const cardTexture = Texture.from('./assets/cards/backR.png');
           if (index === array.length - 1) {
+            const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
             return <CardComponent
             key={card.name}
             name={card.name}
-            anchor={[0.5,-0.5]}
-            x={0 + index*10}
+            anchor={[-0.5,0.1]}
+            x={0}
             y={0}
             width={cardWidth}
             height={cardHeight}
-            texture={cardTexture}
+            texture={Texture.from(cardPath)}
             eventMode={'static'}
           />
           }
@@ -108,7 +94,7 @@ export const GameStage  = (props: Props) => {
             key={card.name}
             name={card.name}
             anchor={0}
-            x={0 + index*cardGap}
+            x={0 + index}
             y={0}
             width={cardWidth}
             height={cardHeight}
@@ -119,8 +105,8 @@ export const GameStage  = (props: Props) => {
       </ContainerWithName>
       <ContainerWithName
         name={"Player2Container"}
-        x={100}
-        y={100}
+        x={width / 2 - width / snap.players[1].cards.length}
+        y={50}
       >
         {snap.players
         .filter((player, index) => index !== playerIndex)[0]
@@ -133,7 +119,7 @@ export const GameStage  = (props: Props) => {
             key={card.name}
             name={card.name}
             anchor={0}
-            x={0 + index*30}
+            x={0 + index*coefficient}
             y={0}
             width={cardWidth}
             height={cardHeight}
@@ -144,19 +130,18 @@ export const GameStage  = (props: Props) => {
       </ContainerWithName>
       <ContainerWithName
         name={"PlacedCardsContainer"}
-        x={100}
-        y={300}
+        x={width / 2 - width / snap.players[1].cards.length}
+        y={height / 3 + width / 30}
       >
         {snap.placedCards.map((cardsPair: TypePlacedCard, index) => {
-          console.log(cardsPair)
           const cardAttacker = cardsPair.attacker as TypeCard,
-                cardDefender = cardsPair.defender? cardsPair.defender : null;
+                cardDefender = cardsPair.defender ? cardsPair.defender : null;
           const cardAttackerPath: string = `./assets/cards/${cardAttacker.suit.slice(0, 1).concat(cardAttacker.rank.toString())}.png`;
           const cardAttackerTexture = Texture.from(cardAttackerPath);
 
           let cardDefenderPath: string = `./assets/cards/backR.png`;
           let cardDefenderTexture = Texture.from(cardDefenderPath);
-          
+
           if (cardDefender) {
             cardDefenderPath = `./assets/cards/${cardDefender.suit.slice(0, 1).concat(cardDefender.rank.toString())}.png`;
             cardDefenderTexture = Texture.from(cardDefenderPath);
@@ -166,8 +151,8 @@ export const GameStage  = (props: Props) => {
             <CardComponent
               key={cardAttacker.name}
               name={cardAttacker.name}
-              anchor={0}
-              x={0 + index*50}
+              // anchor={0.3}
+              x={0 + index*coefficient}
               y={0}
               width={cardWidth}
               height={cardHeight}
@@ -177,7 +162,7 @@ export const GameStage  = (props: Props) => {
               <CardComponent
               key={cardDefender.name}
               name={cardDefender.name}
-              anchor={-0.2}
+              // anchor={-0.2}
               x={0 + index*50}
               y={0}
               width={cardWidth}
@@ -191,7 +176,7 @@ export const GameStage  = (props: Props) => {
       <ContainerWithName
         name={"Player1Container"}
         x={100}
-        y={500}
+        y={2.4 * height / 3}
       >
         {snap.players[playerIndex].cards.map((card: TypeCard, index) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
@@ -200,8 +185,7 @@ export const GameStage  = (props: Props) => {
           return <CardComponent
             key={card.name}
             name={card.name}
-            anchor={0}
-            x={0 + index*30}
+            x={0 + index*cardGap}
             y={0}
             width={cardWidth}
             height={cardHeight}

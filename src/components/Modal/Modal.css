@@ -1,0 +1,7 @@
+.game_stage_buttons {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  left: 100px;
+}

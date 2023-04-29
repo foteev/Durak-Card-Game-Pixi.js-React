@@ -38,7 +38,9 @@ export const gameStoreWithHistory = proxyWithHistory<TypeGameStore>({
     player2
   ],
 
-  lastAction: TypeAction.Undefined
+  lastAction: TypeAction.Undefined,
+
+  dealtCards: [],
 });
 
 export const gameStore = gameStoreWithHistory.value;

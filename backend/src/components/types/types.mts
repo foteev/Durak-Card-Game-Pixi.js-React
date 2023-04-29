@@ -96,7 +96,9 @@ export type TypeGameStore = {
 
   trumpCard?: TypeCard;
 
-  dealtCards?: TypeDealtCard[];
+  // dealtCards?: TypeDealtCard[];
+
+  dealtCards: TypePlacedCard[];
 
   beatingameCards?: TypeCard[];
 

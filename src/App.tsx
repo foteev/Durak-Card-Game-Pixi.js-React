@@ -28,7 +28,7 @@ export const App = () => {
       console.log(err)
       setError(err);
       setShowModal(true);
-      setShowLogin(true);
+      // setShowLogin(true);
       setShowGameStage(false);
     });
 
@@ -42,19 +42,18 @@ export const App = () => {
           updateStore(st);
       }
       setShowLogin(false);
-      console.log('cards: ', gameStore.players[0].cards, gameStore.players[1].cards);
     })
 
     socket.on('store update', (storeJ) => {
       const st = JSON.parse(storeJ);
       updateStore(st);
-      console.log(store);
     })
 
     return () => {
       // socket.off('connect', onConnect);
     };
   }, []);
+
 
   return (
     <React.Suspense fallback={<span>waiting...</span>}>
@@ -66,7 +65,7 @@ export const App = () => {
           <LoginForm />
           : null}
         {showModal ?
-          <Modal showModal={showModal} error={error}/>
+          <Modal showModal={showModal} modalInnerHTML={error}/>
           : null}
         <Buttons playerIndex={playerIndex} />
       </div>
