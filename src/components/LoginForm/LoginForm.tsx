@@ -3,21 +3,26 @@ import './LoginForm.css'
 import{ socket } from '../../socket'
 import { gameStore } from '../store/gameStore';
 import { Modal } from '../Modal/Modal';
+import { connectWallet } from '../utils/utils'
 
-export const LoginForm: React.FC = () => {
+export const LoginForm = (props: any) => {
+  const playerIndex: number = props.playerIndex
   // const { socket } = props;
   const inputRef = React.createRef();
   const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  function onSubmit(event: FormEvent) {
+  const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-    socket.timeout(10).emit('player name & socket.id', {name: value, socketId: socket.id}, () => {
+    socket.emit('player name & socket.id', {name: value, socketId: socket.id}, () => {
       setIsLoading(false);
     });
   }
 
+  const handleConnectWallet = async (playerIndex: number) => {
+   connectWallet(playerIndex);
+  }
 
   return (
     <>
@@ -52,25 +57,26 @@ export const LoginForm: React.FC = () => {
               <div>
                   <div className="flex items-center justify-between">
                     <button 
-                      type="submit"
+                    disabled={isLoading}
+                    onClick={() => handleConnectWallet(playerIndex)}
+                      
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                      Enter room
+                      Connect wallet
                     </button>
                     <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" target="_blank" href="https://www.pagat.com/beating/podkidnoy_durak.html">
-                      Don't know rules?
+                      Read the rules
                     </a>
                 </div>
               </div>
-              {/* <div>
+              <div>
                 <button
                   type="submit"
-                  disabled={isLoading}
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                 Enter room
                 </button>
-              </div> */}
+              </div>
             </form>
 
 

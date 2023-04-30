@@ -57,7 +57,6 @@ export const GameStage  = (props: Props) => {
   const playerIndex = props.playerIndex;
   const snap = useSnapshot(gameStore) as TypeGameStore;
   const handlePlayerClick = (target: any) => {
-    console.log('click')
     playerMove(playerIndex, target);
   }
   const filter = new PIXI.filters.ColorMatrixFilter
@@ -151,9 +150,10 @@ export const GameStage  = (props: Props) => {
             <CardComponent
               key={cardAttacker.name}
               name={cardAttacker.name}
-              // anchor={0.3}
-              x={0 + index*coefficient}
-              y={0}
+              anchor={0.2}
+              
+              x={0 + index*coefficient * 4}
+              y={0 + cardHeight / 4 }
               width={cardWidth}
               height={cardHeight}
               texture={cardAttackerTexture}
@@ -162,8 +162,8 @@ export const GameStage  = (props: Props) => {
               <CardComponent
               key={cardDefender.name}
               name={cardDefender.name}
-              // anchor={-0.2}
-              x={0 + index*50}
+              anchor={-0.2}
+              x={0 + index*coefficient * 4}
               y={0}
               width={cardWidth}
               height={cardHeight}

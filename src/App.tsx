@@ -34,11 +34,14 @@ export const App = () => {
 
     socket.on('player enter', storeJ => {
       const st = JSON.parse(storeJ);
-      if (st.players[1].playerName.length === 0) {
-        updateStore(st);
-      } else if (st.players[1].playerName.length !== 0 
+      if (st.players[0].playerName === store.players[0].playerName) {
+        console.log('is 0')
+      } else  if (st.players[1].playerName === store.players[1].playerName) {
+        console.log('is 1')
+      } else if (st.players[1].playerName.length !== 0
         && gameStore.players[0].playerName.length === 0) {
           setPlayerIndex(1);
+          console.log('set 1')
           updateStore(st);
       }
       setShowLogin(false);
@@ -62,7 +65,7 @@ export const App = () => {
           <GameStage playerIndex={playerIndex} />
           {/* : null } */}
         {showLogin ?
-          <LoginForm />
+          <LoginForm playerIndex={playerIndex}/>
           : null}
         {showModal ?
           <Modal showModal={showModal} modalInnerHTML={error}/>

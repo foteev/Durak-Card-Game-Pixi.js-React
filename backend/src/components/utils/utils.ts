@@ -5,12 +5,12 @@ import {
   TypePlacedCard,
   TypeGameStatus,
   TypePlayerRole,
-  TypePlayerStatus,
   TypePlayer,
   TypeCardRank,
   TypeCardSuit,
   TypeGameStore,
-  TypeAction
+  TypeAction,
+  TypePlayerStatus
 } from "../types/types.mjs";
 // import { MaskedFrame } from "@pixi/ui";
 
@@ -86,7 +86,6 @@ export const giveCards = () => {
       }
     }
   gameStore.gameStatus = TypeGameStatus.GameInProgress
-  console.log('subs draw')
 }
 
 export const makePlayerMove = (playerIndex: number, cardName: string) => {
@@ -100,11 +99,9 @@ export const makePlayerMove = (playerIndex: number, cardName: string) => {
 }
 
 const makeAttackingMove = (playerIndex: number, card: TypeCard) => {
-  console.log('start att move')
   const placedCard = { attacker:card } as TypePlacedCard
   gameStore.placedCards.push(placedCard);
   gameStore.lastAction = TypeAction.AttackerMoveCard
-  console.log(gameStore.placedCards)
 }
 
 const makeDefendingMove = (playerIndex: number, card: TypeCard) => {
@@ -113,42 +110,30 @@ const makeDefendingMove = (playerIndex: number, card: TypeCard) => {
     const placedCardIndex = gameStore.placedCards.reverse().findIndex(placedCard =>
       typeof(placedCard.defender === null)
     )
-    console.log('finding empty att card', placedCardIndex)
-    console.log(gameStore.placedCards[placedCardIndex])
     gameStore.placedCards[placedCardIndex].defender = card;
-    console.log('def card placed') 
-
-      // const placedCard = { defender:card } as TypePlacedCard
-      // console.log(gameStore.placedCards[gameStore.placedCards.length - 1].defender)
-      // gameStore.placedCards[gameStore.placedCards.length - 1].defender = card;
     gameStore.lastAction = TypeAction.DefenderMoveCard
   }
 }
 
 export const undoGameStore = (playerIndex: number) => {
-  console.log(playerIndex);
+
   //is not working:
   // gameStoreWithHistory.undo();
 
   //is working
   const lastSnapshot = gameStoreWithHistory.history.snapshots[gameStoreWithHistory.history.index- 1] as TypeGameStore;
-    gameStore.players[0].cards = [...lastSnapshot.players[0].cards!];
-    gameStore.players[1].cards = [...lastSnapshot.players[1].cards!];
-    console.log(gameStore.players[0].cards)
-    console.log(gameStore.players[1].cards)
+  gameStore.players[0].cards = [...lastSnapshot.players[0].cards!];
+  gameStore.players[1].cards = [...lastSnapshot.players[1].cards!];
 
   if (gameStore.placedCards) {
     gameStore.placedCards = lastSnapshot.placedCards;
-    console.log(gameStore.placedCards);
   }
 }
 
 export const playerPass = (playerIndex: number) => {
   const player = gameStore.players[playerIndex];
-  console.log('got index', playerIndex);
   if (player.playerRole === TypePlayerRole.Attacker) {
     const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
-    console.log(otherPlayerIndex)
     // otherPlayer!.playerRole = TypePlayerRole.Attacker
     player.playerRole = TypePlayerRole.Defender;
     gameStore.players[otherPlayerIndex].playerRole = TypePlayerRole.Attacker;
@@ -184,16 +169,11 @@ export const clearHands = () => {
   if (gameStore.placedCards) {
     gameStore.placedCards = [];
   }
-
-
 }
 
-
 export const sortPlayerCards = (playerIndex: number, type: string) => {
-  console.log(playerIndex, type)
   switch (type) {
     case 'byRank':
-      console.log('case rank')
       gameStore.players[playerIndex].cards.sort((a,b) => Number(a.rank) - Number(b.rank));
       break;
     case 'bySuit':
@@ -204,4 +184,19 @@ export const sortPlayerCards = (playerIndex: number, type: string) => {
     default:
       break;
   }
+}
+
+export const gameOver = (playerIndex: number) => {
+  const player = gameStore.players[playerIndex];
+  const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+  if (player.cards.length === 0) {
+    player.playerStatus = TypePlayerStatus.YouWinner;
+    gameStore.players[otherPlayerIndex].playerStatus = TypePlayerStatus.YouLoser;
+    gameStore.gameStatus = TypeGameStatus.GameIsOver;
+
+  }
+}
+
+const clearHistory = () => {
+  const firstHistory = gameStoreWithHistory.history.snapshots[0] as TypeGameStore;
 }

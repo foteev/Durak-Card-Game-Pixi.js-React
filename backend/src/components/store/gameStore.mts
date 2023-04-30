@@ -1,6 +1,7 @@
 import { TypeGameStore, TypeGameStatus, TypeCard, TypePlacedCard, TypePlayer, TypePlayerRole, TypePlayerStatus, TypeAction } from '../types/types.mjs';
 import { proxy, subscribe } from 'valtio/vanilla';
 import { proxyWithHistory } from 'valtio/utils';
+import { gameOver } from '../utils/utils.js';
 
 const player1: TypePlayer = {
   socketId: '',
@@ -51,3 +52,12 @@ export const gameStore = gameStoreWithHistory.value;
 subscribe(gameStore, () => {
   console.log('store changed')
 });
+
+subscribe(gameStore.players, () => {
+  if (gameStore.players[0].cards.length === 0) {
+    gameOver(0);
+  }
+  if (gameStore.players[1].cards.length === 0) {
+    gameOver(1);
+  }
+})

@@ -17,8 +17,8 @@ import { SocketManager } from './components/utils/SocketManager.mjs';
 
 
 
-const DB_LOGIN = 'palletenjoer';
-const DB_PASSWORD = 87654321;
+const DB_LOGIN = 'durak_admin';
+const DB_PASSWORD = 12345678;
 const PORT = process.env.PORT ?? 5300;
 
 const DB_URL = `mongodb+srv://${DB_LOGIN}:${DB_PASSWORD}@cluster0.afhplie.mongodb.net/Palletport?retryWrites=true&w=majority`
@@ -44,8 +44,8 @@ app.use('/api', authRouter);
 
 const startServer = async () => {
     try {
-        mongoose.set('strictQuery', true);
-        mongoose.connect(DB_URL);
+        // mongoose.set('strictQuery', true);
+        // mongoose.connect(DB_URL);
         httpServer.listen(PORT, () => console.log('It works, WOW! Port: ', PORT));
     } catch (error) {
         console.error(error);
