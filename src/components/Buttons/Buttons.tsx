@@ -14,11 +14,14 @@ import {
 import { useSnapshot } from "valtio";
 import { gameStore } from "../store/gameStore";
 import { TypePlayerRole } from "../../types/types";
- 
+
+type Props = {
+  playerIndex: number
+}
 export const Buttons = (props: any) => {
   const snap = useSnapshot(gameStore);
 
-  const playerIndex: number = props.playerIndex
+  const playerIndex = props.playerIndex
 
   const handleUndoClick = () => {
     socket.emit('undo', playerIndex);

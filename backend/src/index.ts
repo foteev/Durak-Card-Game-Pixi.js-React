@@ -14,9 +14,6 @@ import * as http from 'http';
 import { createDeck } from './components/utils/utils.js';
 import { SocketManager } from './components/utils/SocketManager.mjs';
 
-
-
-
 const DB_LOGIN = 'durak_admin';
 const DB_PASSWORD = 12345678;
 const PORT = process.env.PORT ?? 5300;
@@ -28,7 +25,10 @@ const app = express();
 const httpServer = http.createServer(app);
 export const io = new Server(httpServer, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: [
+            "https://durak2.netlify.app",
+            "http://localhost:3000"
+        ]
     }
   });
 

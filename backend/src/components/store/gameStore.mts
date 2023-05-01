@@ -53,11 +53,3 @@ subscribe(gameStore, () => {
   console.log('store changed')
 });
 
-// subscribe(gameStore.players, () => {
-//   if (gameStore.players[0].cards.length === 0) {
-//     endGame(0);
-//   } else if (gameStore.players[1].cards.length === 0) {
-//     endGame(1);
-//   }
-//   console.log('end game sub')
-// })

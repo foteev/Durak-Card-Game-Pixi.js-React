@@ -1,6 +1,6 @@
-import { Socket } from "socket.io-client";
+import { Socket } from "socket.io";
 import { gameStore, gameStoreWithHistory } from "../store/gameStore.mjs";
-import { TypeGameStatus, TypePlayerRole, TypePlayerStatus } from "components/types/types.mjs";
+import { TypeGameStatus, TypePlayerRole, TypePlayerStatus, TypeAction } from "components/types/types.mjs";
 import { giveCards, makePlayerMove, createDeck, undoGameStore, playerPass, clearHands, sortPlayerCards, endGame } from "./utils.js";
 import { subscribe } from "valtio";
 
@@ -29,10 +29,9 @@ export const SocketManager = (socket: any) => {
     else if (players[1].playerStatus === TypePlayerStatus.Offline && players[0].playerStatus === TypePlayerStatus.InGame) {
       console.log('player 1 enter')
       players[1].playerName = message.name;
-      socket.emit('player 1 enter', JSON.stringify(gameStore));
       players[1].socketId = message.socketId;
       players[1].playerStatus = TypePlayerStatus.InGame
-      
+      socket.emit('player 1 enter', JSON.stringify(gameStore));
     }
     else if (players[0].playerName === message.name) {
       players[0].socketId = message.socketId;
@@ -69,13 +68,29 @@ export const SocketManager = (socket: any) => {
 
   socket.on('end game', (playerIndex: number) => {
     endGame(playerIndex);
-    socket.emit('end game done', playerIndex);
-    // clearHands();
+    socket.emit('end game loser');
+    socket.to(playerIndex === 0 ? players[1].socketId: players[0].socketId).emit('end game winner');
+    clearHands();
   })
 
   subscribe(gameStore, () => {
-    console.log('store emitted', gameStore.gameStatus, gameStore.players[0].playerStatus, gameStore.players[1].playerStatus)
+    console.log('store emitted', gameStore.gameStatus, gameStore.players[0].playerName, gameStore.players[0].playerStatus, gameStore.players[0].playerName, gameStore.players[1].playerStatus)
     socket.to(players[0].socketId).emit('store update', JSON.stringify(gameStore));
     socket.to(players[1].socketId).emit('store update', JSON.stringify(gameStore));
+  })
+
+  subscribe(gameStore.players, () => {
+    if (gameStore.gameStatus === TypeGameStatus.GameInProgress 
+      && gameStore.lastAction !== TypeAction.Undefined
+      && gameStore.deckCards.length === 0) {
+      gameStore.players.forEach((player, playerIndex) => {
+        if (player.cards.length === 0) {
+          const otherPlayerIndex = playerIndex === 0 ? 1: 0
+          endGame(playerIndex);
+          socket.to(players[playerIndex].socketId).emit('end game winner');
+          socket.to(players[otherPlayerIndex].socketId).emit('end game loser');
+        }
+      })
+    }
   })
 }

@@ -58,6 +58,7 @@ export const GameStage  = (props: Props) => {
   const snap = useSnapshot(gameStore) as TypeGameStore;
   const handlePlayerClick = (target: any) => {
     playerMove(playerIndex, target);
+    console.log(playerIndex)
   }
   const filter = new PIXI.filters.ColorMatrixFilter
 
@@ -71,7 +72,6 @@ export const GameStage  = (props: Props) => {
         y={height / 2 - cardHeight / 2}
       >
         {snap.deckCards?.map((card: TypeCard, index, array) => {
-          
           const cardTexture = Texture.from('./assets/cards/backR.png');
           if (index === array.length - 1) {
             const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
@@ -80,7 +80,7 @@ export const GameStage  = (props: Props) => {
             name={card.name}
             rotation={1.55}
             // anchor={[-0.5,0.1]}
-            x={cardHeight}
+            x={cardWidth * 1.55}
             y={cardWidth / 5}
             width={cardWidth}
             height={cardHeight}
@@ -110,8 +110,7 @@ export const GameStage  = (props: Props) => {
         .filter((player, index) => index !== playerIndex)[0]
         .cards
         .map((card: TypeCard, index) => {
-          const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
-          const cardTexture = Texture.from(cardPath);
+          const cardTexture = Texture.from('./assets/cards/backR.png');
 
           return <CardComponent
             key={card.name}

@@ -36,7 +36,7 @@
     "nodemon": "^2.0.20",
     "pg": "^8.9.0",
     "socket.io": "^4.6.1",
-    "valio": "^0.0.17"
+    "valtio": "^1.10.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

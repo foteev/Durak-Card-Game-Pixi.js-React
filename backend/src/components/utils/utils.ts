@@ -1,5 +1,5 @@
 import { gameStore, gameStoreWithHistory } from '../store/gameStore.mjs';
-import { subscribe, snapshot } from "valtio/vanilla";
+import { subscribe, snapshot } from "valtio";
 import {
   TypeCard,
   TypePlacedCard,
@@ -161,13 +161,17 @@ export const playerPass = (playerIndex: number) => {
 
 export const clearHands = () => {
   const startSnapshot = gameStoreWithHistory.history.snapshots[2] as TypeGameStore;
+  const player1 = gameStore.players[0];
+  const player2 = gameStore.players[1];
+  const snap1 = startSnapshot.players[0];
+  const snap2 = startSnapshot.players[1];
   gameStore.deckCards = [...startSnapshot.deckCards!];
-  gameStore.players[0].cards = [...startSnapshot.players[0].cards!];
-  gameStore.players[1].cards = [...startSnapshot.players[1].cards!];
-  gameStore.players[0].playerRole = startSnapshot.players[0].playerRole;
-  gameStore.players[1].playerRole = startSnapshot.players[1].playerRole;
-  gameStore.players[0].playerStatus = startSnapshot.players[0].playerStatus;
-  gameStore.players[1].playerStatus = startSnapshot.players[1].playerStatus;
+  player1.cards = [...snap1.cards!];
+  player2.cards = [...snap2.cards!];
+  player1.playerRole = snap1.playerRole;
+  player2.playerRole = snap2.playerRole;
+  player1.playerStatus = snap1.playerStatus;
+  player2.playerStatus = TypePlayerStatus.InGame;
   gameStore.gameStatus = startSnapshot.gameStatus;
   if (gameStore.placedCards) {
     gameStore.placedCards = [];
@@ -200,6 +204,4 @@ export const endGame = (playerIndex: number) => {
     gameStore.players[playerIndex].playerStatus = TypePlayerStatus.YouWinner;
     gameStore.players[otherPlayerIndex].playerStatus = TypePlayerStatus.YouLoser;
   }
-  // clearHands()
-  // gameStore.gameStatus = TypeGameStatus.GameInProgress
 }

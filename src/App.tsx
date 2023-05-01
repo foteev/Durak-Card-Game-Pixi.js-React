@@ -37,28 +37,24 @@ export const App = () => {
       const st = JSON.parse(storeJ) as TypeGameStore;
       if (st.players[1].playerName !== 'Player 2') {
         setPlayerIndex(1)
-        console.log(playerIndex)
       }
       setShowLogin(false);
     })
 
     socket.on('store update', (storeJ) => {
       const st = JSON.parse(storeJ);
-      console.log(playerIndex)
       updateStore(st);
-
-      if (st.gameStatus === TypeGameStatus.GameIsOver) {
-        if (st.players[playerIndex].playerStatus === TypePlayerStatus.YouLoser) {
-          console.log('if lose')
-          setError('You lose')
-          setShowModal(true);
-        }
-        if (st.players[playerIndex].playerStatus === TypePlayerStatus.YouWinner) {
-          setError('You win!');
-          setShowModal(true);
-        }
-      }
       setShowLogin(false);
+    })
+
+    socket.on('end game loser', () => {
+      setError('You lose')
+      setShowModal(true);
+    })
+
+    socket.on('end game winner', () => {
+      setError('You win!');
+      setShowModal(true);
     })
 
     return () => {
