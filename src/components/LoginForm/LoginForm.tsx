@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 import './LoginForm.css'
 import{ socket } from '../../socket'
 import { gameStore } from '../store/gameStore';
@@ -9,13 +9,13 @@ export const LoginForm = (props: any) => {
   const playerIndex: number = props.playerIndex
   // const { socket } = props;
   const inputRef = React.createRef();
-  const [value, setValue] = useState('');
+  const [name, setName] = useState(props.name);
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     setIsLoading(true);
-    socket.emit('player name & socket.id', {name: value, socketId: socket.id}, () => {
+    socket.emit('player name & socket.id', {name: name, socketId: socket.id}, () => {
       setIsLoading(false);
     });
   }
@@ -45,7 +45,7 @@ export const LoginForm = (props: any) => {
               <div>
                 <div className="mt-2">
                   <input
-                  onChange={ e => setValue(e.target.value)}
+                  onChange={ e => setName(e.target.value)}
                     id="email"
                     name="email"
                     required

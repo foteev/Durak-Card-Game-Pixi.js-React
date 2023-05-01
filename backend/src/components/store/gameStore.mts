@@ -1,14 +1,14 @@
 import { TypeGameStore, TypeGameStatus, TypeCard, TypePlacedCard, TypePlayer, TypePlayerRole, TypePlayerStatus, TypeAction } from '../types/types.mjs';
 import { proxy, subscribe } from 'valtio/vanilla';
 import { proxyWithHistory } from 'valtio/utils';
-import { gameOver } from '../utils/utils.js';
+import { endGame } from '../utils/utils.js';
 
 const player1: TypePlayer = {
   socketId: '',
   playerName: '',
   playerAvatar: 'Avatar 1',
   playerRole: TypePlayerRole.Attacker,
-  playerStatus: TypePlayerStatus.InGame,
+  playerStatus: TypePlayerStatus.Offline,
   cards: [],
 }
 
@@ -55,9 +55,11 @@ subscribe(gameStore, () => {
 
 subscribe(gameStore.players, () => {
   if (gameStore.players[0].cards.length === 0) {
-    gameOver(0);
+    endGame(0);
+    console.log('end 0')
   }
   if (gameStore.players[1].cards.length === 0) {
-    gameOver(1);
+    endGame(1);
+    console.log('end 1')
   }
 })

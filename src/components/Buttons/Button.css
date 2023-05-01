@@ -1,4 +1,11 @@
-.buttons-block {
-  margin: 0 auto;
-  left: 300px;
+.buttons-container {
+  /* margin: 0 auto; */
+  /* margin-left: 10; */
+}
+@media only screen and (max-width: 960px) {
+  .buttons-container {
+
+    display: flex;
+    flex-direction: column;
+  }
 }

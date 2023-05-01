@@ -161,11 +161,14 @@ export const playerPass = (playerIndex: number) => {
 
 export const clearHands = () => {
   const startSnapshot = gameStoreWithHistory.history.snapshots[2] as TypeGameStore;
+  gameStore.deckCards = [...startSnapshot.deckCards!];
   gameStore.players[0].cards = [...startSnapshot.players[0].cards!];
   gameStore.players[1].cards = [...startSnapshot.players[1].cards!];
   gameStore.players[0].playerRole = startSnapshot.players[0].playerRole;
   gameStore.players[1].playerRole = startSnapshot.players[1].playerRole;
-
+  gameStore.players[0].playerStatus = startSnapshot.players[0].playerStatus;
+  gameStore.players[1].playerStatus = startSnapshot.players[1].playerStatus;
+  gameStore.gameStatus = startSnapshot.gameStatus;
   if (gameStore.placedCards) {
     gameStore.placedCards = [];
   }
@@ -186,17 +189,17 @@ export const sortPlayerCards = (playerIndex: number, type: string) => {
   }
 }
 
-export const gameOver = (playerIndex: number) => {
+export const endGame = (playerIndex: number) => {
+  gameStore.gameStatus = TypeGameStatus.GameIsOver;
   const player = gameStore.players[playerIndex];
   const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
-  if (player.cards.length === 0) {
-    player.playerStatus = TypePlayerStatus.YouWinner;
+  if (gameStore.players[playerIndex].cards.length !== 0) {
+    gameStore.players[playerIndex].playerStatus = TypePlayerStatus.YouLoser;
+    gameStore.players[otherPlayerIndex].playerStatus = TypePlayerStatus.YouWinner;
+  } else {
+    gameStore.players[playerIndex].playerStatus = TypePlayerStatus.YouWinner;
     gameStore.players[otherPlayerIndex].playerStatus = TypePlayerStatus.YouLoser;
-    gameStore.gameStatus = TypeGameStatus.GameIsOver;
-
   }
-}
-
-const clearHistory = () => {
-  const firstHistory = gameStoreWithHistory.history.snapshots[0] as TypeGameStore;
+  // clearHands()
+  // gameStore.gameStatus = TypeGameStatus.GameInProgress
 }

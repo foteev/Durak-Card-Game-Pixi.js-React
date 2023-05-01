@@ -13,7 +13,7 @@ import {
 
 const player1: TypePlayer = {
   socketId: '',
-  playerName: '',
+  playerName: 'Player 1',
   playerAvatar: 'Avatar 1',
   playerRole: TypePlayerRole.Attacker,
   playerStatus: TypePlayerStatus.Offline,
@@ -22,7 +22,7 @@ const player1: TypePlayer = {
 
 const player2: TypePlayer = {
   socketId: '',
-  playerName: '',
+  playerName: 'Player 2',
   playerAvatar: 'Avatar 2',
   playerRole: TypePlayerRole.Defender,
   playerStatus: TypePlayerStatus.Offline,

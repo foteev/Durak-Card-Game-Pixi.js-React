@@ -32,8 +32,8 @@ import { playerMove, checkIfAvailable } from '../utils/utils';
 
 const width = window.innerWidth
 const height = window.innerHeight
-const cardHeight = width / 8;
-const cardWidth = 63/88 * cardHeight;
+const cardWidth = width / 10;
+const cardHeight = 88/63 * cardWidth;
 const cardGap = cardWidth * 0.8
 const coefficient = 30;
 
@@ -61,16 +61,14 @@ export const GameStage  = (props: Props) => {
   }
   const filter = new PIXI.filters.ColorMatrixFilter
 
+  // gameStore.placedCards.unshift(gameStore.placedCards.pop()!);
+
   return (
     <Stage width={window.innerWidth} height={window.innerHeight - 48} className='game-stage' options={options} style={style}>
-      {/* <Sprite
-        // scale={1}
-        source={'./assets/table.png'}
-      > */}
-      {/* </Sprite> */}
       <ContainerWithName
       name={'DeckContainer'}
-        y={height / 2}
+        x={30}
+        y={height / 2 - cardHeight / 2}
       >
         {snap.deckCards?.map((card: TypeCard, index, array) => {
           
@@ -80,9 +78,10 @@ export const GameStage  = (props: Props) => {
             return <CardComponent
             key={card.name}
             name={card.name}
-            anchor={[-0.5,0.1]}
-            x={0}
-            y={0}
+            rotation={1.55}
+            // anchor={[-0.5,0.1]}
+            x={cardHeight}
+            y={cardWidth / 5}
             width={cardWidth}
             height={cardHeight}
             texture={Texture.from(cardPath)}
@@ -104,7 +103,7 @@ export const GameStage  = (props: Props) => {
       </ContainerWithName>
       <ContainerWithName
         name={"Player2Container"}
-        x={width / 2 - width / snap.players[1].cards.length}
+        x={width / 2 - width / snap.players[playerIndex === 0 ? 1 : 0].cards.length / 2}
         y={50}
       >
         {snap.players
@@ -129,7 +128,7 @@ export const GameStage  = (props: Props) => {
       </ContainerWithName>
       <ContainerWithName
         name={"PlacedCardsContainer"}
-        x={width / 2 - width / snap.players[1].cards.length}
+        x={width / 2 - width / snap.players[1].cards.length / 2}
         y={height / 3 + width / 30}
       >
         {snap.placedCards.map((cardsPair: TypePlacedCard, index) => {
@@ -151,7 +150,7 @@ export const GameStage  = (props: Props) => {
               key={cardAttacker.name}
               name={cardAttacker.name}
               anchor={0.2}
-              
+              rotation={Math.random()/10}
               x={0 + index*coefficient * 4}
               y={0 + cardHeight / 4 }
               width={cardWidth}
@@ -162,7 +161,8 @@ export const GameStage  = (props: Props) => {
               <CardComponent
               key={cardDefender.name}
               name={cardDefender.name}
-              anchor={-0.2}
+              anchor={-0.3}
+              rotation={Math.random()/10}
               x={0 + index*coefficient * 4}
               y={0}
               width={cardWidth}
@@ -175,20 +175,21 @@ export const GameStage  = (props: Props) => {
       </ContainerWithName>
       <ContainerWithName
         name={"Player1Container"}
-        x={100}
-        y={2.4 * height / 3}
+        x={snap.players[playerIndex].cards.length < 12 ? (width / 2 - snap.players[playerIndex].cards.length * cardGap / 2)
+          : (width / 2 - snap.players[playerIndex].cards.length * cardGap / 4)}
+        y={height - cardHeight - 70}
       >
-        {snap.players[playerIndex].cards.map((card: TypeCard, index) => {
+        {snap.players[playerIndex].cards.map((card: TypeCard, index, array) => {
           const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
           const cardTexture = Texture.from(cardPath);
 
           return <CardComponent
             key={card.name}
             name={card.name}
-            x={0 + index*cardGap}
+            x={array.length < 12 ? index*cardGap : index*cardGap / 2}
             y={0}
-            width={cardWidth}
-            height={cardHeight}
+            width={array.length < 12 ? cardWidth : 2* cardWidth / 3}
+            height={array.length < 12 ? cardHeight : 2* cardHeight / 3}
             texture={cardTexture}
             tint={checkIfAvailable(playerIndex, card) ? '0xFFFFFF' : '0x505050'}
             eventMode={'static'}
@@ -229,7 +230,6 @@ const ContainerWithName = (props: any) => <Container {...props} />;
         interactive={true}
         // pointerdown={toggleAnimation} */}
       {/* /> */}
-
             {/* <ContainerWithName
         name={"ButtonsContainer"}
       > */}
@@ -241,10 +241,7 @@ const ContainerWithName = (props: any) => <Container {...props} />;
         /> */}
       {/* </ContainerWithName> */}
 
-      
   // useEffect(() => {
-  //   // I use Promises for no reason other than I often work with 
-  //   // ancient hardware.
   //   function loadSprite() {
   //     Assets
   //       .load(spritesheetUrl)
@@ -265,7 +262,6 @@ const ContainerWithName = (props: any) => <Container {...props} />;
 
   // console.log('[Game] textures', textures)
 
-  // I changed this to null as TS complained about returning a string
   // if (!textures) {
   //   return null;
   // }

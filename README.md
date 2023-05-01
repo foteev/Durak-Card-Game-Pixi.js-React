@@ -1,4 +1,4 @@
-# Durak Multiplayer Card Game
+# Durak 2 Multiplayer Card Game
 
 Made with:
 
@@ -19,13 +19,17 @@ Ether.js
 [http://....../](http://............/)
 
 ### ToDo
+Player and deck data protection
+Timers
 Tests
+Tests with players
+Room size up to 4 players
+Add game versions
 Root storage and multiple room controls
 Registration
 Rating and history saving
 Ranking matches
-Smart contract
-Player and deck data protection
+Solidity smart contracts for betting and stakes
 Chat with silent mode
 Fonts
 Rooms decorations
@@ -33,6 +37,7 @@ Sounds
 3D scenes
 Animations
 Buttons and texts as pixie elements
+Web application
 
 ## Frontend Scripts
 
