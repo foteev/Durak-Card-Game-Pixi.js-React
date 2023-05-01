@@ -33,17 +33,11 @@ export const App = () => {
       setShowGameStage(false);
     });
 
-    socket.on('player enter', storeJ => {
+    socket.on('player 1 enter', storeJ => {
       const st = JSON.parse(storeJ) as TypeGameStore;
-      console.log()
-      console.log(name, st.players[0].playerName)
-      if (st.players[0].playerName !== 'Player 1') {
-        console.log('index 0')
-        setPlayerIndex(0)
-        if (st.players[1].playerName !== 'Player 2') {
-          setPlayerIndex(1)
-          console.log(playerIndex)
-        }
+      if (st.players[1].playerName !== 'Player 2') {
+        setPlayerIndex(1)
+        console.log(playerIndex)
       }
       setShowLogin(false);
     })
@@ -64,7 +58,6 @@ export const App = () => {
           setShowModal(true);
         }
       }
-
       setShowLogin(false);
     })
 
