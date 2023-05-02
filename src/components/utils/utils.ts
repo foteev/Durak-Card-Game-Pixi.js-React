@@ -4,6 +4,8 @@ import { TypePlacedCard, TypePlayerRole, TypeCard, TypePlayer, TypeGameStatus, T
 import { snapshot } from "valtio/vanilla";
 import { ethers } from 'ethers';
 
+
+
 export const playerMove = (playerIndex: number, target: any) => {
   const card = gameStore.players[playerIndex].cards.filter((c: TypeCard) => c.name === target.name)[0];
   if (checkIfAvailable(playerIndex, card)) {
@@ -51,15 +53,17 @@ const checkCardRank = (playerCard: TypeCard): boolean => {
 }
 
 export const connectWallet = async (playerIndex: number) =>{
-  if (typeof (window as any).ethereum !== 'undefined') {
+  console.log('check type')
+  if (typeof window.ethereum !== 'undefined') {
+    console.log('eth ok')
     const provider = new ethers.providers.Web3Provider(window.ethereum, 'any')
     const signer = provider.getSigner()
     const signedMessage = await signer.signMessage("I am at least 18 years of age and I have read, accepted and agreed to the Privacy Policy and Terms and Conditions")
     signer.getAddress()
     .then(res => {
       console.log(res)
-      gameStore.players[0].playerAvatar = res;
-      console.log(gameStore.players[0].playerAvatar)
+      gameStore.players[playerIndex].playerAvatar = res;
+      console.log(gameStore.players[playerIndex].playerAvatar)
     })
     .catch(err => console.log(err))
   } else alert('Install Metamask extension!');

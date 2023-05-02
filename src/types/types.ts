@@ -1,11 +1,11 @@
 // import { Texture, Container } from '@pixi/react';
 
 export const enum TypeGameStatus {
-  WaitingForPlayers = 'WaitingForPlayers',
-  WaitingForStart = 'WaitingForStart',
-  DrawingCards = 'DrawingCards',
-  GameInProgress = 'GameInProgress',
-  GameIsOver = 'GameIsOver',
+  WaitingForPlayers = 'Waiting For Players',
+  WaitingForStart = 'Waiting For Start',
+  DrawingCards = 'Drawing Cards',
+  GameInProgress = 'Game In Progress',
+  GameIsOver = 'Game Is Over',
 }
 
 export const enum TypePlayerRole {

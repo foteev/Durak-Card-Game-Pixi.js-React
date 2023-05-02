@@ -4,13 +4,13 @@ import {
   AnimatedSprite,
   Container,
   Sprite,
-  PixiComponent
+  PixiComponent,
+  Text
 } from "@pixi/react";
 import { 
   Assets,
   Texture,
   Graphics,
-  Text
 } from "pixi.js";
 import * as PIXI from 'pixi.js';
 import { proxy, subscribe, useSnapshot } from 'valtio';
@@ -38,7 +38,7 @@ const cardGap = cardWidth * 0.8
 const coefficient = 30;
 
 const options = {
-  backgroundColor: 0xFFFFFF,
+  backgroundColor: "#2B212C",
   resolution: window.devicePixelRatio,
   backgroundAlpha: 0,
   autoResize: true,
@@ -48,62 +48,150 @@ const style = {
   height: height,
 };
 
+const textStyle = new PIXI.TextStyle({
+  align: "center",
+  fontFamily: "sans-serif",
+  fontSize: `${coefficient / 2}px`,
+  fontWeight: "bold",
+  fill: ["#FFFFFF", "#FFFFFF"],
+  // stroke: "#FFFFFF",
+  // strokeThickness: 1,
+  letterSpacing: 1,
+  wordWrap: true,
+  wordWrapWidth: 350
+});
+
 type Props = {
   playerIndex: number
 }
 
 export const GameStage  = (props: Props) => {
-
-  const playerIndex = props.playerIndex;
+  const playerIndex = props.playerIndex
+  let otherPlayerIndex = props.playerIndex === 0 ? 1 : 0;
   const snap = useSnapshot(gameStore) as TypeGameStore;
   const handlePlayerClick = (target: any) => {
     playerMove(playerIndex, target);
-    console.log(playerIndex)
   }
   const filter = new PIXI.filters.ColorMatrixFilter
 
   // gameStore.placedCards.unshift(gameStore.placedCards.pop()!);
 
   return (
+    <>
     <Stage width={window.innerWidth} height={window.innerHeight - 48} className='game-stage' options={options} style={style}>
       <ContainerWithName
-      name={'DeckContainer'}
-        x={30}
-        y={height / 2 - cardHeight / 2}
+        name={'RoomTextContainer'}
+        x={width - coefficient * 10}
+        y={coefficient * 2}
       >
-        {snap.deckCards?.map((card: TypeCard, index, array) => {
-          const cardTexture = Texture.from('./assets/cards/backR.png');
-          if (index === array.length - 1) {
-            const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
-            return <CardComponent
-            key={card.name}
-            name={card.name}
-            rotation={1.55}
-            // anchor={[-0.5,0.1]}
-            x={cardWidth * 1.55}
-            y={cardWidth / 5}
-            width={cardWidth}
-            height={cardHeight}
-            texture={Texture.from(cardPath)}
-            eventMode={'static'}
-          />
-          }
-          return <CardComponent
-            key={card.name}
-            name={card.name}
-            anchor={0}
-            x={0 + index}
-            y={0}
-            width={cardWidth}
-            height={cardHeight}
-            texture={cardTexture}
-            eventMode={'static'}
-          />
-        })}
+          <Text
+          text={`Room id: ${snap.id}`}
+          x={0}
+          y={0}
+          anchor={0}
+          style={textStyle}
+        />
+        <Text
+          text={`Game status: ${snap.gameStatus}`}
+          x={0}
+          y={coefficient}
+          anchor={0}
+          style={textStyle}
+        />
       </ContainerWithName>
       <ContainerWithName
+        name={'PlayerTextContainer'}
+        x={30}
+        y={height - coefficient * 5}
+      >
+        <Text
+            text={`Index: ${playerIndex}, ${snap.players[playerIndex].playerName}`}
+            // x={width / 2}
+            y={0}
+            anchor={0}
+            style={textStyle}
+          />
+          <Text
+            text={`Role: ${snap.players[playerIndex].playerRole}`}
+            // x={width / 2}
+            y={coefficient}
+            anchor={0}
+            style={textStyle}
+          />
+          <Text
+            text={`Status: ${snap.players[playerIndex].playerStatus}`}
+            // x={width / 2}
+            y={coefficient * 2}
+            anchor={0}
+            style={textStyle}
+          />
+      </ContainerWithName>
+      <ContainerWithName
+        name={'Player2TextContainer'}
+        x={30}
+        y={coefficient * 2}
+      >
+        <Text
+            text={`Index: ${otherPlayerIndex}, ${snap.players[otherPlayerIndex].playerName}`}
+            // x={width / 2}
+            y={0}
+            anchor={0}
+            style={textStyle}
+          />
+          <Text
+            text={`Role: ${snap.players[otherPlayerIndex].playerRole}`}
+            // x={width / 2}
+            y={coefficient}
+            anchor={0}
+            style={textStyle}
+          />
+          <Text
+            text={`Status: ${snap.players[otherPlayerIndex].playerStatus}`}
+            // x={width / 2}
+            y={coefficient * 2}
+            anchor={0}
+            style={textStyle}
+          />
+      </ContainerWithName>
+      <ContainerWithName
+        name={'DeckContainer'}
+          x={30}
+          y={height / 2 - cardHeight / 2}
+        >
+          {snap.deckCards?.map((card: TypeCard, index, array) => {
+            const cardTexture = Texture.from('./assets/cards/backR.png');
+            if (index === array.length - 1) {
+              const cardPath: string = `./assets/cards/${card.suit.slice(0, 1).concat(card.rank.toString())}.png`;
+              return <CardComponent
+              key={card.name}
+              name={card.name}
+              rotation={1.55}
+              // anchor={[-0.5,0.1]}
+              x={cardWidth * 1.55}
+              y={cardWidth / 5}
+              width={cardWidth}
+              height={cardHeight}
+              texture={Texture.from(cardPath)}
+              eventMode={'static'}
+            />
+            }
+            return <CardComponent
+              key={card.name}
+              name={card.name}
+              anchor={0}
+              x={0 + index}
+              y={0}
+              width={cardWidth}
+              height={cardHeight}
+              texture={cardTexture}
+              eventMode={'static'}
+            />
+          })}
+        </ContainerWithName>
+      <ContainerWithName
         name={"Player2Container"}
-        x={width / 2 - width / snap.players[playerIndex === 0 ? 1 : 0].cards.length / 2}
+        x={snap.players[otherPlayerIndex].cards.length < 12 ? (width / 2 - snap.players[otherPlayerIndex].cards.length * cardGap / 4)
+        : (width / 2 - snap.players[otherPlayerIndex].cards.length * cardGap / 8)}
         y={50}
       >
         {snap.players
@@ -128,7 +216,7 @@ export const GameStage  = (props: Props) => {
       <ContainerWithName
         name={"PlacedCardsContainer"}
         x={width / 2 - width / snap.players[1].cards.length / 2}
-        y={height / 3 + width / 30}
+        y={height / 3}
       >
         {snap.placedCards.map((cardsPair: TypePlacedCard, index) => {
           const cardAttacker = cardsPair.attacker as TypeCard,
@@ -199,6 +287,8 @@ export const GameStage  = (props: Props) => {
         })}
       </ContainerWithName>
     </Stage>
+    </>
+    
   );
 }
 

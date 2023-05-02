@@ -5,22 +5,28 @@ import { gameStore } from '../store/gameStore';
 import { Modal } from '../Modal/Modal';
 import { connectWallet } from '../utils/utils'
 
-export const LoginForm = (props: any) => {
-  const playerIndex: number = props.playerIndex
+type Props = {
+  playerIndex: number;
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  playerEnter: () => void;
+}
+
+export const LoginForm = (props: Props) => {
+  const playerIndex = props.playerIndex;
+  const name = props.name;
   // const { socket } = props;
   const inputRef = React.createRef();
-  const [name, setName] = useState(props.name);
   const [isLoading, setIsLoading] = useState(false);
+  
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
-    setIsLoading(true);
-    socket.emit('player name & socket.id', {name: name, socketId: socket.id}, () => {
-      setIsLoading(false);
-    });
+    // setIsLoading(true);
+    props.playerEnter();
   }
 
-  const handleConnectWallet = async (playerIndex: number) => {
+  const handleConnectWallet = async () => {
    connectWallet(playerIndex);
   }
 
@@ -45,7 +51,9 @@ export const LoginForm = (props: any) => {
               <div>
                 <div className="mt-2">
                   <input
-                  onChange={ e => setName(e.target.value)}
+                  onChange={ (e) => {
+                    props.setName(e.target!.value!)
+                  }}
                     id="email"
                     name="email"
                     required
@@ -56,11 +64,10 @@ export const LoginForm = (props: any) => {
 
               <div>
                   <div className="flex items-center justify-between">
-                    <button 
+                    <button
                     disabled={isLoading}
-                    onClick={() => handleConnectWallet(playerIndex)}
-                      
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={() => handleConnectWallet()}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
                       Connect wallet
                     </button>

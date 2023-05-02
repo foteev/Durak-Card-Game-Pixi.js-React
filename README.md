@@ -16,27 +16,29 @@ Ether.js
 
 ## **Live game:** 
 
-[http://....../](http://............/)
+[https://durak2.netlify.app/](https://durak2.netlify.app/)
 
 ### ToDo
+Pixi/react Events
 Player and deck data protection
 Timers
 Tests
+Registration
 Tests with players
 Room size up to 4 players
+Spectator mode for trainings
 Add game versions
 Root storage and multiple room controls
-Registration
 Rating and history saving
 Ranking matches
 Solidity smart contracts for betting and stakes
 Chat with silent mode
 Fonts
-Rooms decorations
+Room decorations
 Sounds
-3D scenes
-Animations
 Buttons and texts as pixie elements
+Animations
+3D scenes
 Web application
 
 ## Frontend Scripts

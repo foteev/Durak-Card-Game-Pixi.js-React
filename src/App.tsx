@@ -11,6 +11,8 @@ import { socket } from './socket';
 import { Modal } from './components/Modal/Modal';
 import { Buttons } from './components/Buttons/Buttons';
 
+const width = window.innerWidth
+const height = window.innerHeight
 
 
 export const App = () => {
@@ -29,15 +31,24 @@ export const App = () => {
       console.log(err)
       setError(err);
       setShowModal(true);
-      // setShowLogin(true);
+      setShowLogin(true);
       setShowGameStage(false);
     });
 
+    // socket.on('connect', () => {
+      socket.on('game status', (message) => {
+        console.log(message)
+      })
+    // })
+
+    socket.on('player 0 enter', storeJ => {
+      const st = JSON.parse(storeJ) as TypeGameStore;
+        setPlayerIndex(0);
+    })
+
     socket.on('player 1 enter', storeJ => {
       const st = JSON.parse(storeJ) as TypeGameStore;
-      if (st.players[1].playerName !== 'Player 2') {
-        setPlayerIndex(1)
-      }
+      setPlayerIndex(1)
       setShowLogin(false);
     })
 
@@ -45,16 +56,41 @@ export const App = () => {
       const st = JSON.parse(storeJ);
       updateStore(st);
       setShowLogin(false);
+      setShowGameStage(true);
     })
 
     socket.on('end game loser', () => {
+      console.log('you loser')
       setError('You lose')
       setShowModal(true);
     })
 
     socket.on('end game winner', () => {
+      console.log('you win')
       setError('You win!');
       setShowModal(true);
+    })
+
+    socket.on(`exit ${name}`, () => {
+      // socket.on('disconnect', () => {
+        setShowGameStage(false);
+        setShowLogin(true);
+        socket.connect();
+      // })
+    })
+
+    socket.on('exit 0 1', () => {
+      socket.on('disconnect', () => {
+        setShowGameStage(false);
+        setShowLogin(true);
+        socket.connect();
+      })
+    })
+
+    socket.on('disconnect', () => {
+      setShowGameStage(false);
+      setShowLogin(true);
+      socket.connect();
     })
 
     return () => {
@@ -62,20 +98,31 @@ export const App = () => {
     };
   }, []);
 
+  const playerEnter = () => {
+    socket.emit('player name & socket.id', {name: name, socketId: socket.id}, () => {
+    });
+  }
 
   return (
     <React.Suspense fallback={<span>waiting...</span>}>
       <div className="App">
-        {/* {showGameStage ? */}
+        {showGameStage ?
           <GameStage playerIndex={playerIndex} />
-          {/* : null } */}
+          : <div
+            style={{
+              width: width,
+              height: height - 50
+            }}
+            >
+          </div>
+        }
         {showLogin ?
-          <LoginForm playerIndex={playerIndex} name={name}/>
+          <LoginForm  playerIndex={playerIndex} name={name} setName={setName} playerEnter={playerEnter}/>
           : null}
         {showModal ?
           <Modal showModal={showModal} modalInnerHTML={error}/>
           : null}
-        <Buttons playerIndex={playerIndex} />
+        <Buttons playerIndex={playerIndex} showLogin={showLogin} set/>
       </div>
     </React.Suspense>
   );
