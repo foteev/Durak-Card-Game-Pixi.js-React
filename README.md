@@ -3,15 +3,25 @@
 Made with:
 
 Typescript
+
 React.js
+
 Pixi/react
+
 Pixi.js
+
 Tailwind CSS
+
 Material Tailwind
+
 Valtio
+
 Node.js
+
 Socket.io
+
 MongoDB
+
 Ether.js
 
 ## **Live game:** 
@@ -19,26 +29,47 @@ Ether.js
 [https://durak2.netlify.app/](https://durak2.netlify.app/)
 
 ### ToDo
+
 Pixi/react Events
+
 Player and deck data protection
+
 Timers
+
 Tests
+
 Registration
+
 Tests with players
+
 Room size up to 4 players
+
 Spectator mode for trainings
+
 Add game versions
+
 Root storage and multiple room controls
+
 Rating and history saving
+
 Ranking matches
+
 Solidity smart contracts for betting and stakes
+
 Chat with silent mode
+
 Fonts
+
 Room decorations
+
 Sounds
+
 Buttons and texts as pixie elements
+
 Animations
+
 3D scenes
+
 Web application
 
 ## Frontend Scripts
