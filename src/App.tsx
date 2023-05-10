@@ -72,11 +72,9 @@ export const App = () => {
     })
 
     socket.on(`exit ${name}`, () => {
-      // socket.on('disconnect', () => {
-        setShowGameStage(false);
-        setShowLogin(true);
-        socket.connect();
-      // })
+      setShowGameStage(false);
+      setShowLogin(true);
+      socket.connect();
     })
 
     socket.on('exit 0 1', () => {
@@ -94,7 +92,6 @@ export const App = () => {
     })
 
     return () => {
-      // socket.off('connect', onConnect);
     };
   }, []);
 

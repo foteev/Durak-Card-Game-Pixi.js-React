@@ -44,5 +44,4 @@ export const ButtonComponent = PixiComponent('ButtonComponent', {
          }
     }
   }),
-  // applyProps: (props) => {...props}
 });

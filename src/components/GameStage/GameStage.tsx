@@ -7,7 +7,7 @@ import {
   PixiComponent,
   Text
 } from "@pixi/react";
-import { 
+import {
   Assets,
   Texture,
   Graphics,
@@ -29,6 +29,7 @@ import {
 import { gameStore } from "../store/gameStore";
 import './GameStage.css'
 import { playerMove, checkIfAvailable } from '../utils/utils';
+import { EventSystem } from '@pixi/events';
 
 const width = window.innerWidth
 const height = window.innerHeight

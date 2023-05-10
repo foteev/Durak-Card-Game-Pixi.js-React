@@ -27,7 +27,7 @@ export const checkIfAvailable = (playerIndex: number, card: TypeCard): boolean =
       }
     })
     return Boolean(count);
-    
+
   } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Attacker && gameStore.placedCards.length === 0) {
     return true;
   } else if (gameStore.players[playerIndex].playerRole === TypePlayerRole.Defender && gameStore.placedCards.length !== 0) {
