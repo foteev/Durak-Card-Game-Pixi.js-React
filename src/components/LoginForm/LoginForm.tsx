@@ -15,14 +15,12 @@ type Props = {
 export const LoginForm = (props: Props) => {
   const playerIndex = props.playerIndex;
   const name = props.name;
-  // const { socket } = props;
   const inputRef = React.createRef();
   const [isLoading, setIsLoading] = useState(false);
   
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
-    // setIsLoading(true);
     props.playerEnter();
   }
 

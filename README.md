@@ -54,10 +54,14 @@ The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
 ### Backend Scripts
-In the `\backend` directory, you can run:
+
+[https://github.com/foteev/Durak2_Server/](https://github.com/foteev/Durak2_Server/)
+
+In the project directory, you can run:
 
 #### `nodemon src/index.ts`
 
 It runs the server in "watch" mode
 Use [http://localhost:5300](http://localhost:5300) to access it.
 You will also see any errors in the console.
+You can restart server by 'rs' input

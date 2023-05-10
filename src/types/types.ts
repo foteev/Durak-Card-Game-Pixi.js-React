@@ -22,11 +22,6 @@ export const enum TypePlayerStatus {
   YouLoser = 'YOU_LOSER',
 }
 
-// export type TypeCard = {
-  // rank: TypeCardRank;
-  // suit: TypeCardSuit;
-// };
-
 export type TypeCard = {
   name: string;
   rank: TypeCardRank;

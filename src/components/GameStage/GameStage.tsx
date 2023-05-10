@@ -32,7 +32,7 @@ import { playerMove, checkIfAvailable } from '../utils/utils';
 
 const width = window.innerWidth
 const height = window.innerHeight
-const cardWidth = width / 10;
+const cardWidth = width / 12;
 const cardHeight = 88/63 * cardWidth;
 const cardGap = cardWidth * 0.8
 const coefficient = 30;
@@ -54,8 +54,6 @@ const textStyle = new PIXI.TextStyle({
   fontSize: `${coefficient / 2}px`,
   fontWeight: "bold",
   fill: ["#FFFFFF", "#FFFFFF"],
-  // stroke: "#FFFFFF",
-  // strokeThickness: 1,
   letterSpacing: 1,
   wordWrap: true,
   wordWrapWidth: 350
@@ -73,8 +71,6 @@ export const GameStage  = (props: Props) => {
     playerMove(playerIndex, target);
   }
   const filter = new PIXI.filters.ColorMatrixFilter
-
-  // gameStore.placedCards.unshift(gameStore.placedCards.pop()!);
 
   return (
     <>
@@ -106,21 +102,18 @@ export const GameStage  = (props: Props) => {
       >
         <Text
             text={`Index: ${playerIndex}, ${snap.players[playerIndex].playerName}`}
-            // x={width / 2}
             y={0}
             anchor={0}
             style={textStyle}
           />
           <Text
             text={`Role: ${snap.players[playerIndex].playerRole}`}
-            // x={width / 2}
             y={coefficient}
             anchor={0}
             style={textStyle}
           />
           <Text
             text={`Status: ${snap.players[playerIndex].playerStatus}`}
-            // x={width / 2}
             y={coefficient * 2}
             anchor={0}
             style={textStyle}
@@ -133,21 +126,18 @@ export const GameStage  = (props: Props) => {
       >
         <Text
             text={`Index: ${otherPlayerIndex}, ${snap.players[otherPlayerIndex].playerName}`}
-            // x={width / 2}
             y={0}
             anchor={0}
             style={textStyle}
           />
           <Text
             text={`Role: ${snap.players[otherPlayerIndex].playerRole}`}
-            // x={width / 2}
             y={coefficient}
             anchor={0}
             style={textStyle}
           />
           <Text
             text={`Status: ${snap.players[otherPlayerIndex].playerStatus}`}
-            // x={width / 2}
             y={coefficient * 2}
             anchor={0}
             style={textStyle}
@@ -166,7 +156,6 @@ export const GameStage  = (props: Props) => {
               key={card.name}
               name={card.name}
               rotation={1.55}
-              // anchor={[-0.5,0.1]}
               x={cardWidth * 1.55}
               y={cardWidth / 5}
               width={cardWidth}
@@ -295,62 +284,3 @@ export const GameStage  = (props: Props) => {
 export const CardComponent = (props: any) => <Sprite {...props} />;
 
 const ContainerWithName = (props: any) => <Container {...props} />;
-
-
-
-
-// const spritesheetUrl =
-//   "https://pixijs.io/examples/examples/assets/spritesheet/fighter.json";
-
-// const ButtonComponent = PixiComponent('ButtonComponent', {
-//   create: () => new ButtonContainer(
-//     new Graphics()
-//         .beginFill(0xFFFFFF)
-//         .drawRoundedRect(0, 0, 100, 50, 15)
-// ),
-//   // applyProps: (props) => {...props}
-// });
-
-      {/* <AnimatedSprite
-        initialFrame={0}
-        isPlaying={true}
-        position={[300,75]} // changed to a Point tuple
-        // textures={Object.values(textures)}
-        interactive={true}
-        // pointerdown={toggleAnimation} */}
-      {/* /> */}
-            {/* <ContainerWithName
-        name={"ButtonsContainer"}
-      > */}
-        {/* <ButtonComponent
-          x={100}
-          y={100}
-          click={handleClick}
-          // width={100}
-        /> */}
-      {/* </ContainerWithName> */}
-
-  // useEffect(() => {
-  //   function loadSprite() {
-  //     Assets
-  //       .load(spritesheetUrl)
-  //       .then((sheet) => {
-  //         setTextures(sheet.textures);
-  //       })
-  //       .catch((err) => {
-  //         console.error('[Game][useEffect] err %o loading sheet', err)
-  //       })
-  //   }
-
-    // loadSprite()
-
-  //   return () => {
-  //     console.log("Some sort of cleanup here")
-  //   }
-  // }, []);
-
-  // console.log('[Game] textures', textures)
-
-  // if (!textures) {
-  //   return null;
-  // }

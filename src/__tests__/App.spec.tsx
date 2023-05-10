@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
 import React from 'react'
-// import { OurComponent } from '../OurComponent';
-import { render, screen /*, waitFor, fireEvent, act*/ } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { App } from '../App'
 
 describe('Main Window', () => {

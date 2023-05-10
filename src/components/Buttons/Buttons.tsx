@@ -42,7 +42,6 @@ export const Buttons = (props: any) => {
 
   const handleEndGame = () => {
     socket.emit('end game', playerIndex);
-    // socket.emit('reset');
   }
 
   const handleExit = () => {
@@ -79,7 +78,7 @@ export const Buttons = (props: any) => {
             End game
         </Button>
         <Button variant="gradient" className="flex items-center gap-3" onClick={handleExit}> 
-            Exit
+            Leave
         </Button>
         <Button variant="gradient" className="flex items-center gap-3" onClick={() => window.location.href = 'https://github.com/foteev/Durak-Card-Game-Pixi.js-React'}>
           @github
